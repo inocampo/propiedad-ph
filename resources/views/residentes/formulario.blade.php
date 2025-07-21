@@ -5,6 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Residentes - Conjunto Residencial Gualanday</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos para controlar los anchos de las columnas en las tablas */
+        @media (min-width: 768px) {
+            /* Tabla de propietarios */
+            #owners-container td:nth-child(1),
+            #owners-container th:nth-child(1) { width: 30%; }
+            #owners-container td:nth-child(2),
+            #owners-container th:nth-child(2) { width: 20%; }
+            #owners-container td:nth-child(3),
+            #owners-container th:nth-child(3) { width: 20%; }
+            #owners-container td:nth-child(4),
+            #owners-container th:nth-child(4) { width: 30%; }
+            #owners-container td:nth-child(5),
+            #owners-container th:nth-child(5) { width: 10%; }
+            
+            /* Tabla de residentes */
+            #residents-container td:nth-child(1),
+            #residents-container th:nth-child(1) { width: 30%; }
+            #residents-container td:nth-child(2),
+            #residents-container th:nth-child(2) { width: 20%; }
+            #residents-container td:nth-child(3),
+            #residents-container th:nth-child(3) { width: 20%; }
+            #residents-container td:nth-child(4),
+            #residents-container th:nth-child(4) { width: 30%; }
+            #residents-container td:nth-child(5),
+            #residents-container th:nth-child(5) { width: 10%; }
+        }
+        
+        /* Reducir el tamaño de fuente y padding en los controles de los repeaters */
+        #owners-container input, #owners-container select,
+        #residents-container input, #residents-container select,
+        #minors-container input, #minors-container select {
+            font-size: 0.8rem; /* text-sm */
+            padding-top: 0.25rem; /* py-1 */
+            padding-bottom: 0.25rem;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
     <div class="min-h-screen py-10">
@@ -13,6 +50,7 @@
                 <div class="text-center mb-8">
                     <h1 class="text-3xl font-bold text-gray-800">Formulario de Registro</h1>
                     <p class="text-gray-600 mt-2">Apartamento: {{ $apartamento ? $apartamento->number : request()->route('number') }}</p>
+                    <p class="text-gray-600 mt-2"><span class="text-red-600">*</span> Campos obligatorios</p>
                 </div>
 
                 @if ($errors->any())
@@ -35,28 +73,28 @@
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label for="resident_name" class="block text-gray-700 text-sm font-bold mb-2">Nombre Completo:</label>
+                                <label for="resident_name" class="block text-gray-700 text-sm font-bold mb-2">Nombre Completo: <span class="text-red-600">*</span></label>
                                 <input type="text" id="resident_name" name="resident_name" 
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase"
                                     value="{{ $apartamento ? $apartamento->resident_name : old('resident_name') }}" required>
                             </div>
                             
                             <div>
-                                <label for="resident_document" class="block text-gray-700 text-sm font-bold mb-2">Cédula:</label>
+                                <label for="resident_document" class="block text-gray-700 text-sm font-bold mb-2">Cédula: <span class="text-red-600">*</span></label>
                                 <input type="text" id="resident_document" name="resident_document" 
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     value="{{ $apartamento ? $apartamento->resident_document : old('resident_document') }}" required>
                             </div>
                             
                             <div>
-                                <label for="resident_phone" class="block text-gray-700 text-sm font-bold mb-2">Celular:</label>
+                                <label for="resident_phone" class="block text-gray-700 text-sm font-bold mb-2">Celular: <span class="text-red-600">*</span></label>
                                 <input type="tel" id="resident_phone" name="resident_phone" 
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     value="{{ $apartamento ? $apartamento->resident_phone : old('resident_phone') }}" required>
                             </div>
                             
                             <div>
-                                <label for="resident_email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                                <label for="resident_email" class="block text-gray-700 text-sm font-bold mb-2">Email: <span class="text-red-600">*</span></label>
                                 <input type="email" id="resident_email" name="resident_email" 
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline lowercase"
                                     value="{{ $apartamento ? $apartamento->resident_email : old('resident_email') }}" required>
@@ -118,22 +156,22 @@
                                 <!-- Tabla de propietarios -->
                                 <div class="overflow-x-auto">
                                     <table class="min-w-full bg-white">
-                                        <thead>
+                                        <thead class="hidden md:table-header-group">
                                             <tr class="bg-gray-100 text-gray-600 uppercase text-sm">
-                                                <th class="py-3 px-4 text-left">Nombre Completo</th>
-                                                <th class="py-3 px-4 text-left">Cédula</th>
-                                                <th class="py-3 px-4 text-left">Celular</th>
-                                                <th class="py-3 px-4 text-left">Email</th>
-                                                <th class="py-3 px-4 text-center">Acción</th>
+                                                <th class="py-3 px-4 text-left w-[30%]">Nombre Completo</th>
+                                                <th class="py-3 px-4 text-left w-[20%]">Cédula</th>
+                                                <th class="py-3 px-4 text-left w-[20%]">Celular</th>
+                                                <th class="py-3 px-4 text-left w-[30%]">Email</th>
+                                                <th class="py-3 px-2 text-center w-10"></th>
                                             </tr>
                                         </thead>
-                                        <tbody id="owners-container">
+                                        <tbody id="owners-container" class="block md:table-row-group">
                                             <!-- Los propietarios se agregarán aquí dinámicamente -->
                                         </tbody>
                                         <tfoot>
                                             <tr>
                                                 <td colspan="5" class="py-3 px-4">
-                                                    <button type="button" id="add-owner-btn" class="flex items-center justify-center w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                                                    <button type="button" id="add-owner-btn" class="flex items-center justify-center w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white font-medium py-1 px-2 rounded-lg transition-colors">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                                                             <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                                                         </svg>
@@ -164,22 +202,22 @@
                                 <!-- Tabla de residentes -->
                                 <div class="overflow-x-auto">
                                     <table class="min-w-full bg-white">
-                                        <thead>
+                                        <thead class="hidden md:table-header-group">
                                             <tr class="bg-gray-100 text-gray-600 uppercase text-sm">
                                                 <th class="py-3 px-4 text-left">Nombre Completo</th>
                                                 <th class="py-3 px-4 text-left">Cédula</th>
                                                 <th class="py-3 px-4 text-left">Celular</th>
                                                 <th class="py-3 px-4 text-left">Parentesco</th>
-                                                <th class="py-3 px-4 text-center">Acción</th>
+                                                <th class="py-3 px-2 text-center w-10"></th>
                                             </tr>
                                         </thead>
-                                        <tbody id="residents-container">
+                                        <tbody id="residents-container" class="block md:table-row-group">
                                             <!-- Los residentes se agregarán aquí dinámicamente -->
                                         </tbody>
                                         <tfoot>
                                             <tr>
                                                 <td colspan="5" class="py-3 px-4">
-                                                    <button type="button" id="add-resident-btn" class="flex items-center justify-center w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                                                    <button type="button" id="add-resident-btn" class="flex items-center justify-center w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white font-medium py-1 px-2 rounded-lg transition-colors">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                                                             <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                                                         </svg>
@@ -210,21 +248,21 @@
                                 <!-- Tabla de menores de edad -->
                                 <div class="overflow-x-auto">
                                     <table class="min-w-full bg-white">
-                                        <thead>
+                                        <thead class="hidden md:table-header-group">
                                             <tr class="bg-gray-100 text-gray-600 uppercase text-sm">
                                                 <th class="py-3 px-4 text-left">Nombre</th>
                                                 <th class="py-3 px-4 text-left">Edad</th>
                                                 <th class="py-3 px-4 text-left">Género</th>
-                                                <th class="py-3 px-4 text-center">Acción</th>
+                                                <th class="py-3 px-2 text-center w-10"></th>
                                             </tr>
                                         </thead>
-                                        <tbody id="minors-container">
+                                        <tbody id="minors-container" class="block md:table-row-group">
                                             <!-- Los menores se agregarán aquí dinámicamente -->
                                         </tbody>
                                         <tfoot>
                                             <tr>
                                                 <td colspan="4" class="py-3 px-4">
-                                                    <button type="button" id="add-minor-btn" class="flex items-center justify-center w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                                                    <button type="button" id="add-minor-btn" class="flex items-center justify-center w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white font-medium py-1 px-2 rounded-lg transition-colors">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                                                             <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                                                         </svg>
@@ -242,24 +280,25 @@
                     
                     <!-- Template para nuevos propietarios (oculto) -->
                     <template id="owner-template">
-                        <tr class="owner-item border-b hover:bg-gray-50">
-                            <td class="py-2 px-4">
+                        <tr class="owner-item border-b hover:bg-gray-50 block md:table-row mb-6 md:mb-0">
+                            <td class="py-1 px-2 block md:table-cell before:content-['Nombre_Completo:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
                                 <input type="text" name="owners[INDEX][name]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase owner-input-name" required>
                             </td>
-                            <td class="py-2 px-4">
+                            <td class="py-1 px-2 block md:table-cell before:content-['Cédula:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
                                 <input type="text" name="owners[INDEX][document]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                             </td>
-                            <td class="py-2 px-4">
+                            <td class="py-1 px-2 block md:table-cell before:content-['Celular:'] before:font-bold before:text-gray-700 before:block md:before:hidden">
                                 <input type="tel" name="owners[INDEX][phone]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                             </td>
-                            <td class="py-2 px-4">
+                            <td class="py-1 px-2 block md:table-cell md:w-[30%] before:content-['Email:'] before:font-bold before:text-gray-700 before:block md:before:hidden">
                                 <input type="email" name="owners[INDEX][email]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline lowercase">
                             </td>
-                            <td class="py-2 px-4 text-center">
-                                <button type="button" class="remove-owner-btn text-red-500 hover:text-red-700 focus:outline-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <td class="py-1 px-2 text-center block md:table-cell">
+                                <button type="button" class="remove-owner-btn w-full md:w-auto bg-red-600 hover:bg-red-700 md:bg-transparent md:hover:bg-transparent text-white md:text-red-600 font-medium py-1 px-2 rounded-lg focus:outline-none transition-colors duration-200 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-1 md:mr-0" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                                     </svg>
+                                    <span class="md:hidden">Eliminar</span>
                                 </button>
                             </td>
                         </tr>
@@ -267,17 +306,17 @@
                     
                     <!-- Template para nuevos residentes (oculto) -->
                     <template id="resident-template">
-                        <tr class="resident-item border-b hover:bg-gray-50">
-                            <td class="py-2 px-4">
+                        <tr class="resident-item border-b hover:bg-gray-50 block md:table-row mb-6 md:mb-0">
+                            <td class="py-1 px-2 block md:table-cell before:content-['Nombre_Completo:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
                                 <input type="text" name="residents[INDEX][name]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase resident-input-name" required>
                             </td>
-                            <td class="py-2 px-4">
+                            <td class="py-1 px-2 block md:table-cell before:content-['Cédula:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
                                 <input type="text" name="residents[INDEX][document]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                             </td>
-                            <td class="py-2 px-4">
+                            <td class="py-1 px-2 block md:table-cell before:content-['Celular:'] before:font-bold before:text-gray-700 before:block md:before:hidden">
                                 <input type="tel" name="residents[INDEX][phone]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                             </td>
-                            <td class="py-2 px-4">
+                            <td class="py-1 px-2 block md:table-cell before:content-['Parentesco:'] before:font-bold before:text-gray-700 before:block md:before:hidden">
                                 <select name="residents[INDEX][relationship_id]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                     <option value="">Seleccionar...</option>
                                     @foreach($relationships as $relationship)
@@ -285,11 +324,12 @@
                                     @endforeach
                                 </select>
                             </td>
-                            <td class="py-2 px-4 text-center">
-                                <button type="button" class="remove-resident-btn text-red-500 hover:text-red-700 focus:outline-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <td class="py-1 px-2 text-center block md:table-cell">
+                                <button type="button" class="remove-resident-btn w-full md:w-auto bg-red-600 hover:bg-red-700 md:bg-transparent md:hover:bg-transparent text-white md:text-red-600 font-medium py-1 px-2 rounded-lg focus:outline-none transition-colors duration-200 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-1 md:mr-0" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                                     </svg>
+                                    <span class="md:hidden">Eliminar</span>
                                 </button>
                             </td>
                         </tr>
@@ -297,25 +337,26 @@
                     
                     <!-- Template para nuevos menores de edad (oculto) -->
                     <template id="minor-template">
-                        <tr class="minor-item border-b hover:bg-gray-50">
-                            <td class="py-2 px-4">
+                        <tr class="minor-item border-b hover:bg-gray-50 block md:table-row mb-6 md:mb-0">
+                            <td class="py-1 px-2 block md:table-cell before:content-['Nombre:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
                                 <input type="text" name="minors[INDEX][name]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase minor-input-name" required>
                             </td>
-                            <td class="py-2 px-4">
+                            <td class="py-1 px-2 block md:table-cell before:content-['Edad:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
                                 <input type="number" name="minors[INDEX][age]" min="0" max="17" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                             </td>
-                            <td class="py-2 px-4">
+                            <td class="py-1 px-2 block md:table-cell before:content-['Género:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
                                 <select name="minors[INDEX][gender]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                                     <option value="">Seleccionar...</option>
-                                    <option value="M">Masculino</option>
-                                    <option value="F">Femenino</option>
+                                    <option value="niño">Niño</option>
+                                    <option value="niña">Niña</option>
                                 </select>
                             </td>
-                            <td class="py-2 px-4 text-center">
-                                <button type="button" class="remove-minor-btn text-red-500 hover:text-red-700 focus:outline-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <td class="py-1 px-2 text-center block md:table-cell">
+                                <button type="button" class="remove-minor-btn w-full md:w-auto bg-red-600 hover:bg-red-700 md:bg-transparent md:hover:bg-transparent text-white md:text-red-600 font-medium py-1 px-2 rounded-lg focus:outline-none transition-colors duration-200 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-1 md:mr-0" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                                     </svg>
+                                    <span class="md:hidden">Eliminar</span>
                                 </button>
                             </td>
                         </tr>
