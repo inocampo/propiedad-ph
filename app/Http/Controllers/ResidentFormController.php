@@ -114,8 +114,8 @@ class ResidentFormController extends Controller
         
         // Cargar relaciones si el apartamento existe
         if ($apartamento) {
-            // Cargar propietarios y residentes con eager loading
-            $apartamento->load(['owners', 'residents.relationship']);
+            // Cargar propietarios, residentes y menores con eager loading
+            $apartamento->load(['owners', 'residents.relationship', 'minors']);
             
             // Verificar que los propietarios se cargaron correctamente
             if ($apartamento->owners->isEmpty()) {
@@ -161,6 +161,10 @@ class ResidentFormController extends Controller
             'residents.*.document' => 'required|string|max:20',
             'residents.*.phone' => 'nullable|string|max:20',
             'residents.*.relationship_id' => 'nullable|exists:relationships,id',
+            'minors' => 'nullable|array',
+            'minors.*.name' => 'required|string|max:255',
+            'minors.*.age' => 'nullable|integer|min:0|max:17',
+            'minors.*.gender' => 'nullable|string|in:M,F',
         ]);
 
         // Buscar o crear el apartamento
@@ -213,6 +217,27 @@ class ResidentFormController extends Controller
                     'document_number' => $residentData['document'],
                     'phone_number' => $residentData['phone'] ?? null,
                     'relationship_id' => $residentData['relationship_id'] ?? null,
+                ]);
+            }
+        }
+        
+        // Procesar menores de edad
+        if ($request->has('minors')) {
+            // Eliminar menores existentes si los hay
+            $apartamento->minors()->delete();
+            
+            // Log para depuración
+            \Log::info('Datos de menores recibidos:', $request->minors);
+            
+            // Agregar nuevos menores
+            foreach ($request->minors as $minorData) {
+                // Log para cada menor
+                \Log::info('Procesando menor:', $minorData);
+                
+                $apartamento->minors()->create([
+                    'name' => strtoupper($minorData['name']),
+                    'age' => $minorData['age'] ?? null,
+                    'gender' => $minorData['gender'] ?? null,
                 ]);
             }
         }

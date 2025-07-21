@@ -192,6 +192,52 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- Acordeón de Menores de Edad a Cargo -->
+                        <div class="accordion-section mb-4 border rounded-lg overflow-hidden bg-white shadow-sm">
+                            <div class="accordion-header cursor-pointer bg-blue-50 px-4 py-3 flex justify-between items-center" id="menores-header">
+                                <div class="flex items-center">
+                                    <span class="font-medium text-lg">Menores de Edad</span>
+                                    <span class="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full ml-3" id="minors-counter">0</span>
+                                </div>
+                                <button type="button" class="accordion-toggle focus:outline-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="accordion-body p-4 hidden" id="menores-body">
+                                <!-- Tabla de menores de edad -->
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full bg-white">
+                                        <thead>
+                                            <tr class="bg-gray-100 text-gray-600 uppercase text-sm">
+                                                <th class="py-3 px-4 text-left">Nombre</th>
+                                                <th class="py-3 px-4 text-left">Edad</th>
+                                                <th class="py-3 px-4 text-left">Género</th>
+                                                <th class="py-3 px-4 text-center">Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="minors-container">
+                                            <!-- Los menores se agregarán aquí dinámicamente -->
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="4" class="py-3 px-4">
+                                                    <button type="button" id="add-minor-btn" class="flex items-center justify-center w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                                        </svg>
+                                                        Agregar Menor de Edad
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-2">Si no hay menores, haz clic en el botón para añadir el primero.</p>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Template para nuevos propietarios (oculto) -->
@@ -249,6 +295,32 @@
                         </tr>
                     </template>
                     
+                    <!-- Template para nuevos menores de edad (oculto) -->
+                    <template id="minor-template">
+                        <tr class="minor-item border-b hover:bg-gray-50">
+                            <td class="py-2 px-4">
+                                <input type="text" name="minors[INDEX][name]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase minor-input-name" required>
+                            </td>
+                            <td class="py-2 px-4">
+                                <input type="number" name="minors[INDEX][age]" min="0" max="17" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                            </td>
+                            <td class="py-2 px-4">
+                                <select name="minors[INDEX][gender]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Femenino</option>
+                                </select>
+                            </td>
+                            <td class="py-2 px-4 text-center">
+                                <button type="button" class="remove-minor-btn text-red-500 hover:text-red-700 focus:outline-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                    </template>
+                    
                     <!-- Botón de Envío -->
                     <div class="flex items-center justify-center mt-8">
                         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline">
@@ -276,8 +348,9 @@
         // Variables para contar propietarios y residentes
         let ownerCount = 0;
         let residentCount = 0;
+        let minorCount = 0;
         
-        // Función para contar elementos actuales en el DOM
+        // Función para contar elementos reales en el DOM
         function recountElements() {
             // Contar propietarios reales en el DOM
             const ownerItems = document.querySelectorAll('#owners-container .owner-item');
@@ -287,6 +360,10 @@
             const residentItems = document.querySelectorAll('#residents-container .resident-item');
             residentCount = residentItems.length;
             
+            // Contar menores de edad reales en el DOM
+            const minorItems = document.querySelectorAll('#minors-container .minor-item');
+            minorCount = minorItems.length;
+            
             // Actualizar contadores en la UI
             updateCounters();
         }
@@ -295,6 +372,7 @@
         function updateCounters() {
             document.getElementById('owners-counter').textContent = ownerCount;
             document.getElementById('residents-counter').textContent = residentCount;
+            document.getElementById('minors-counter').textContent = minorCount;
         }
 
         // Función para agregar un nuevo propietario
@@ -430,8 +508,80 @@
         function renumberResidents() {
             const residentRows = document.querySelectorAll('#residents-container .resident-item');
             residentRows.forEach((row, index) => {
-                // Renumerar los inputs
-                const inputs = row.querySelectorAll('input');
+                // Renumerar los inputs y selects
+                const inputs = row.querySelectorAll('input, select');
+                inputs.forEach(input => {
+                    const nameParts = input.name.split('[');
+                    if (nameParts.length > 1) {
+                        input.name = `${nameParts[0]}[${index}]${input.name.substring(input.name.indexOf(']') + 1)}`;
+                    }
+                });
+            });
+        }
+        
+        // Función para agregar un menor de edad
+        function addMinor(index = null) {
+            const newIndex = index !== null ? index : minorCount;
+            console.log(`Agregando menor con índice ${newIndex}. Contador actual: ${minorCount}`);
+            
+            // Obtener el template
+            const template = document.getElementById('minor-template');
+            const clone = document.importNode(template.content, true);
+            
+            // Reemplazar el índice placeholder en todos los inputs y selects
+            const inputs = clone.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                const originalName = input.name;
+                input.name = input.name.replace('INDEX', newIndex);
+                console.log(`Campo renombrado de ${originalName} a ${input.name}`);
+                
+                // Agregar un atributo data-index para facilitar la depuración
+                input.setAttribute('data-index', newIndex);
+            });
+            
+            // Agregar evento para eliminar menor
+            const removeBtn = clone.querySelector('.remove-minor-btn');
+            removeBtn.addEventListener('click', function() {
+                const minorRow = this.closest('.minor-item');
+                minorRow.remove();
+                // Usar recountElements para actualizar el contador basado en elementos reales
+                recountElements();
+                renumberMinors();
+            });
+            
+            // Agregar el menor al contenedor
+            const container = document.getElementById('minors-container');
+            container.appendChild(clone);
+            console.log(`Menor ${newIndex} agregado al DOM. Contenedor tiene ${container.children.length} hijos`);
+            
+            // Actualizar contadores basados en elementos reales en el DOM
+            recountElements();
+            console.log(`Menor agregado. Nuevo contador: ${minorCount}`);
+            
+            // Devolver el índice del menor agregado para referencia
+            return newIndex;
+            
+            // Si estamos agregando un nuevo menor manualmente, abrir acordeón y enfocar
+            if (index === null) {
+                const menoresBody = document.getElementById('menores-body');
+                if (menoresBody.classList.contains('hidden')) {
+                    toggleAccordion('menores-header');
+                }
+                
+                // Enfocar el campo de nombre del nuevo menor
+                const minorRows = document.querySelectorAll('#minors-container .minor-item');
+                const lastMinorRow = minorRows[minorRows.length - 1];
+                const lastMinorNameInput = lastMinorRow.querySelector('.minor-input-name');
+                lastMinorNameInput.focus();
+            }
+        }
+        
+        // Función para renumerar menores
+        function renumberMinors() {
+            const minorRows = document.querySelectorAll('#minors-container .minor-item');
+            minorRows.forEach((row, index) => {
+                // Renumerar los inputs y selects
+                const inputs = row.querySelectorAll('input, select');
                 inputs.forEach(input => {
                     const nameParts = input.name.split('[');
                     if (nameParts.length > 1) {
@@ -665,6 +815,101 @@
                 @else
                     console.log('El apartamento no tiene residentes');
                 @endif
+                
+                // Verificar si el apartamento tiene menores de edad
+                @if(isset($apartamento->minors) && count($apartamento->minors) > 0)
+                    console.log('Menores encontrados en el apartamento:', @json($apartamento->minors));
+                    
+                    // Cargar menores existentes
+                    try {
+                        // Obtener los datos de menores directamente del backend
+                        const minorsData = [
+                            @foreach($apartamento->minors as $index => $minor)
+                                {
+                                    id: {{ $minor->id }},
+                                    name: "{{ $minor->name }}",
+                                    age: "{{ $minor->age ?? '' }}",
+                                    gender: "{{ $minor->gender ?? '' }}"
+                                }@if(!$loop->last),@endif
+                            @endforeach
+                        ];
+                        
+                        console.log('Menores procesados:', minorsData);
+                        
+                        if (minorsData && minorsData.length > 0) {
+                            console.log('Menores a cargar:', minorsData.length);
+                            
+                            // Limpiar contenedor de menores antes de cargar
+                            document.getElementById('minors-container').innerHTML = '';
+                            
+                            minorsData.forEach((minor, index) => {
+                                console.log(`Cargando menor ${index}:`, minor);
+                                
+                                // Crear un nuevo menor con el índice correcto y obtener su índice
+                                const addedIndex = addMinor(index);
+                                console.log(`Menor añadido con índice ${addedIndex}, buscando elementos para cargar datos...`);
+                                
+                                // Obtener el menor recién añadido
+                                const minorRows = document.querySelectorAll('#minors-container .minor-item');
+                                console.log(`Total de filas de menores: ${minorRows.length}`);
+                                
+                                // Obtener la última fila añadida
+                                const currentMinorRow = minorRows[minorRows.length - 1];
+                                if (!currentMinorRow) {
+                                    console.error(`No se pudo encontrar la fila para el menor ${index}`);
+                                    return;
+                                }
+                                
+                                try {
+                                    // Imprimir todos los inputs en la fila para depuración
+                                    const allInputs = currentMinorRow.querySelectorAll('input, select');
+                                    console.log(`Encontrados ${allInputs.length} campos en la fila del menor:`);
+                                    allInputs.forEach(input => {
+                                        console.log(`- Campo: ${input.name}, tipo: ${input.tagName.toLowerCase()}`);
+                                    });
+                                    
+                                    // Llenar los campos - usando selectores más robustos
+                                    const nameInput = currentMinorRow.querySelector('input[name^="minors["][name$="[name]"]');
+                                    const ageInput = currentMinorRow.querySelector('input[name^="minors["][name$="[age]"]');
+                                    const genderSelect = currentMinorRow.querySelector('select[name^="minors["][name$="[gender]"]');
+                                    
+                                    if (nameInput) {
+                                        nameInput.value = minor.name || '';
+                                        console.log(`Nombre del menor ${index} establecido:`, nameInput.value);
+                                    } else {
+                                        console.error(`No se encontró el campo de nombre para el menor ${index}`);
+                                    }
+                                    
+                                    if (ageInput) {
+                                        ageInput.value = minor.age || '';
+                                        console.log(`Edad del menor ${index} establecida:`, ageInput.value);
+                                    } else {
+                                        console.error(`No se encontró el campo de edad para el menor ${index}`);
+                                    }
+                                    
+                                    if (genderSelect && minor.gender) {
+                                        genderSelect.value = minor.gender;
+                                        console.log(`Género seleccionado para ${minor.name}:`, minor.gender);
+                                    } else if (!genderSelect) {
+                                        console.error(`No se encontró el campo de género para el menor ${index}`);
+                                    }
+                                    
+                                    console.log('Menor cargado correctamente');
+                                } catch (e) {
+                                    console.error('Error al llenar campos del menor:', e);
+                                }
+                            });
+                            
+                            updateCounters();
+                        } else {
+                            console.log('No hay menores para cargar');
+                        }
+                    } catch (e) {
+                        console.error('Error al cargar menores:', e);
+                    }
+                @else
+                    console.log('El apartamento no tiene menores');
+                @endif
             @else
                 console.log('No hay apartamento para cargar');
             @endif
@@ -672,7 +917,7 @@
             // Actualizar contadores basados en elementos reales en el DOM
             console.log('Actualizando contadores finales...');
             recountElements();
-            console.log('Contadores finales - Propietarios:', ownerCount, 'Residentes:', residentCount);
+            console.log('Contadores finales - Propietarios:', ownerCount, 'Residentes:', residentCount, 'Menores:', minorCount);
         }
 
         // Inicializar eventos cuando el DOM esté listo
@@ -696,6 +941,16 @@
                 const residentRows = document.querySelectorAll('#residents-container .resident-item');
                 const lastResidentRow = residentRows[residentRows.length - 1];
                 const firstInput = lastResidentRow.querySelector('input');
+                if (firstInput) firstInput.focus();
+            });
+            
+            // Inicializar botón para agregar menor de edad
+            document.getElementById('add-minor-btn').addEventListener('click', function() {
+                addMinor();
+                // Enfocar el primer input del nuevo menor
+                const minorRows = document.querySelectorAll('#minors-container .minor-item');
+                const lastMinorRow = minorRows[minorRows.length - 1];
+                const firstInput = lastMinorRow.querySelector('input');
                 if (firstInput) firstInput.focus();
             });
             
