@@ -6,6 +6,12 @@ use App\Models\Apartment;
 use App\Models\Owner;
 use App\Models\Resident;
 use App\Models\Relationship;
+use App\Models\Minor;
+use App\Models\Vehicle;
+use App\Models\Pet;
+use App\Models\Brand;
+use App\Models\Color;
+use App\Models\Breed;
 use App\Mail\VerificationCode;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -14,6 +20,25 @@ use Illuminate\Http\Request;
 
 class ResidentFormController extends Controller
 {
+    /**
+     * Método privado para obtener todas las variables necesarias para el formulario
+     */
+    private function getFormData($apartamento = null)
+    {
+        // Cargar relaciones si el apartamento existe
+        if ($apartamento) {
+            $apartamento->load(['owners', 'residents.relationship', 'minors', 'vehicles', 'pets']);
+        }
+        
+        return [
+            'apartamento' => $apartamento,
+            'relationships' => Relationship::orderBy('name')->get(),
+            'brands' => Brand::orderBy('name')->get(),
+            'colors' => Color::orderBy('name')->get(),
+            'breeds' => Breed::orderBy('name')->get(),
+        ];
+    }
+
     /**
      * Muestra la página inicial para ingresar el número de apartamento
      */
@@ -89,51 +114,26 @@ class ResidentFormController extends Controller
         if ($request->codigo === $codigoGuardado) {
             $apartamento = Apartment::where('number', $apartmentNumber)->firstOrFail();
             
-            // Cargar relaciones
-            $apartamento->load(['owners', 'residents.relationship']);
+            // ✅ Usar el método privado para obtener todos los datos
+            $data = $this->getFormData($apartamento);
             
-            // Cargar todos los tipos de parentesco para el select
-            $relationships = Relationship::orderBy('name')->get();
-            
-            return view('residentes.formulario', [
-                'apartamento' => $apartamento,
-                'relationships' => $relationships
-            ]);
+            return view('residentes.formulario', $data);
         } else {
             return back()->withErrors(['codigo' => 'El código ingresado no es válido.']);
         }
     }
 
     /**
-     * Muestra el formulario para ingresar datos
      * Muestra el formulario para ingresar o actualizar datos
      */
     public function mostrarFormulario($number)
     {
         $apartamento = Apartment::where('number', $number)->first();
         
-        // Cargar relaciones si el apartamento existe
-        if ($apartamento) {
-            // Cargar propietarios, residentes y menores con eager loading
-            $apartamento->load(['owners', 'residents.relationship', 'minors']);
-            
-            // Verificar que los propietarios se cargaron correctamente
-            if ($apartamento->owners->isEmpty()) {
-                // Si no hay propietarios, intentar cargarlos nuevamente
-                $apartamento->load('owners');
-            }
-        }
+        // ✅ Usar el método privado para obtener todos los datos
+        $data = $this->getFormData($apartamento);
         
-        // Cargar todos los tipos de parentesco para el select
-        $relationships = Relationship::orderBy('name')->get();
-        
-        // Depurar para verificar que los datos se están pasando correctamente
-        // dd($apartamento->toArray()); // Descomentar para depurar
-        
-        return view('residentes.formulario', [
-            'apartamento' => $apartamento,
-            'relationships' => $relationships
-        ]);
+        return view('residentes.formulario', $data);
     }
 
     /**
@@ -151,20 +151,39 @@ class ResidentFormController extends Controller
             'bicycles_count' => 'nullable|integer|min:1|required_if:has_bicycles,1',
             'received_manual' => 'nullable|boolean',
             'observations' => 'nullable|string',
+            
+            // Propietarios
             'owners' => 'nullable|array',
             'owners.*.name' => 'required|string|max:255',
             'owners.*.document' => 'required|string|max:20',
             'owners.*.phone' => 'nullable|string|max:20',
             'owners.*.email' => 'nullable|email|max:255',
+            
+            // Residentes
             'residents' => 'nullable|array',
             'residents.*.name' => 'required|string|max:255',
             'residents.*.document' => 'required|string|max:20',
             'residents.*.phone' => 'nullable|string|max:20',
             'residents.*.relationship_id' => 'nullable|exists:relationships,id',
+            
+            // Menores de edad
             'minors' => 'nullable|array',
             'minors.*.name' => 'required|string|max:255',
             'minors.*.age' => 'nullable|integer|min:0|max:17',
-            'minors.*.gender' => 'nullable|string|in:M,F',
+            'minors.*.gender' => 'nullable|string|in:niño,niña',
+            
+            // Vehículos
+            'vehicles' => 'nullable|array',
+            'vehicles.*.type' => 'required|string|in:carro,moto',
+            'vehicles.*.license_plate' => 'required|string|max:10',
+            'vehicles.*.brand' => 'nullable|exists:brands,id',
+            'vehicles.*.color' => 'nullable|exists:colors,id',
+            
+            // Mascotas
+            'pets' => 'nullable|array',
+            'pets.*.name' => 'required|string|max:255',
+            'pets.*.type' => 'required|string|in:perro,gato',
+            'pets.*.breed' => 'nullable|exists:breeds,id',
         ]);
 
         // Buscar o crear el apartamento
@@ -184,10 +203,8 @@ class ResidentFormController extends Controller
         
         // Procesar propietarios
         if ($request->has('owners')) {
-            // Eliminar propietarios existentes si los hay
             $apartamento->owners()->delete();
             
-            // Agregar nuevos propietarios
             foreach ($request->owners as $ownerData) {
                 $apartamento->owners()->create([
                     'name' => strtoupper($ownerData['name']),
@@ -200,18 +217,9 @@ class ResidentFormController extends Controller
         
         // Procesar residentes
         if ($request->has('residents')) {
-            // Eliminar residentes existentes si los hay
             $apartamento->residents()->delete();
             
-            // Log para depuración
-            \Log::info('Datos de residentes recibidos:', $request->residents);
-            
-            // Agregar nuevos residentes
             foreach ($request->residents as $residentData) {
-                // Log para cada residente
-                \Log::info('Procesando residente:', $residentData);
-                \Log::info('Valor de parentesco:', ['relationship_id' => $residentData['relationship_id'] ?? 'no definido']);
-                
                 $apartamento->residents()->create([
                     'name' => strtoupper($residentData['name']),
                     'document_number' => $residentData['document'],
@@ -223,21 +231,40 @@ class ResidentFormController extends Controller
         
         // Procesar menores de edad
         if ($request->has('minors')) {
-            // Eliminar menores existentes si los hay
             $apartamento->minors()->delete();
             
-            // Log para depuración
-            \Log::info('Datos de menores recibidos:', $request->minors);
-            
-            // Agregar nuevos menores
             foreach ($request->minors as $minorData) {
-                // Log para cada menor
-                \Log::info('Procesando menor:', $minorData);
-                
                 $apartamento->minors()->create([
                     'name' => strtoupper($minorData['name']),
                     'age' => $minorData['age'] ?? null,
                     'gender' => $minorData['gender'] ?? null,
+                ]);
+            }
+        }
+        
+        // Procesar vehículos
+        if ($request->has('vehicles')) {
+            $apartamento->vehicles()->delete();
+            
+            foreach ($request->vehicles as $vehicleData) {
+                $apartamento->vehicles()->create([
+                    'type' => $vehicleData['type'],
+                    'license_plate' => strtoupper($vehicleData['license_plate']),
+                    'brand_id' => $vehicleData['brand'] ?? null,
+                    'color_id' => $vehicleData['color'] ?? null,
+                ]);
+            }
+        }
+        
+        // ✅ PROCESAR MASCOTAS
+        if ($request->has('pets')) {
+            $apartamento->pets()->delete();
+            
+            foreach ($request->pets as $petData) {
+                $apartamento->pets()->create([
+                    'name' => strtoupper($petData['name']),
+                    'type' => $petData['type'],
+                    'breed_id' => $petData['breed'] ?? null,
                 ]);
             }
         }

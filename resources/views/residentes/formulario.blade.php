@@ -36,7 +36,8 @@
         /* Reducir el tamaño de fuente y padding en los controles de los repeaters */
         #owners-container input, #owners-container select,
         #residents-container input, #residents-container select,
-        #minors-container input, #minors-container select {
+        #minors-container input, #minors-container select,
+        #vehicles-container input, #vehicles-container select {
             font-size: 0.8rem; /* text-sm */
             padding-top: 0.25rem; /* py-1 */
             padding-bottom: 0.25rem;
@@ -233,7 +234,7 @@
                                                 <th class="py-3 px-4 text-left">Cédula</th>
                                                 <th class="py-3 px-4 text-left">Celular</th>
                                                 <th class="py-3 px-4 text-left">Parentesco</th>
-                                                <th class="py-3 px-2 text-center w-10"></th>
+                                                <th class="py-3 px-2 text-center w-5"></th>
                                             </tr>
                                         </thead>
                                         <tbody id="residents-container" class="block md:table-row-group">
@@ -302,6 +303,57 @@
                                     </table>
                                 </div>
                                 <p class="text-sm text-gray-500 mt-2">Si no hay menores, haz clic en el botón para añadir el primero.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Acordeón de Vehículos -->
+                        <div class="accordion-section mb-4 border rounded-lg overflow-hidden bg-white shadow-sm">
+                            <div class="accordion-header cursor-pointer bg-blue-50 px-4 py-3 flex justify-between items-center" id="vehiculos-header">
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m-4 6H4m0 0l4 4m-4-4l4-4" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                                    </svg>
+                                    <span class="font-medium text-lg">Vehículos</span>
+                                    <span class="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full ml-3" id="vehicles-counter">0</span>
+                                </div>
+                                <button type="button" class="accordion-toggle focus:outline-none" onclick="toggleAccordion('vehiculos-header')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="accordion-body p-4 hidden" id="vehiculos-body">
+                                <!-- Tabla de vehículos -->
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full bg-white">
+                                        <thead class="hidden md:table-header-group">
+                                            <tr class="bg-gray-100 text-gray-600 uppercase text-sm">
+                                                <th class="py-3 px-4 text-left w-[20%]">Tipo</th>
+                                                <th class="py-3 px-4 text-left w-[20%]">Placa</th>
+                                                <th class="py-3 px-4 text-left w-[30%]">Marca</th>
+                                                <th class="py-3 px-4 text-left w-[30%]">Color</th>
+                                                <th class="py-3 px-2 text-center w-10"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="vehicles-container" class="block md:table-row-group">
+                                            <!-- Los vehículos se agregarán aquí dinámicamente -->
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="5" class="py-3 px-4">
+                                                    <button type="button" id="add-vehicle-btn" class="flex items-center justify-center w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white font-medium py-1 px-2 rounded-lg transition-colors">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                                        </svg>
+                                                        Agregar Vehículo
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-2">Si no hay vehículos, haz clic en el botón para añadir el primero.</p>
                             </div>
                         </div>
                     </div>
@@ -390,6 +442,53 @@
                         </tr>
                     </template>
                     
+                    <!-- Template para nuevos vehículos (oculto) -->
+                    <template id="vehicle-template">
+                        <tr class="vehicle-item border-b hover:bg-gray-50 block md:table-row mb-6 md:mb-0">
+                            <td class="py-1 px-2 block md:table-cell before:content-['Tipo:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+                                <select name="vehicles[INDEX][type]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline vehicle-input-type" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="carro">Carro</option>
+                                    <option value="moto">Moto</option>
+                                </select>
+                            </td>
+                            <td class="py-1 px-2 block md:table-cell before:content-['Placa:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+                                <input type="text" name="vehicles[INDEX][license_plate]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase vehicle-input-plate" required>
+                            </td>
+                            <td class="py-1 px-2 block md:table-cell before:content-['Marca:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+                                <select name="vehicles[INDEX][brand]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline vehicle-input-brand" required>
+                                    <option value="">Seleccione...</option>
+                                    @foreach($brands as $brand)
+                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                    @endforeach
+                                    <option value="otro">Otro</option>
+                                    <option value="honda">Honda</option>
+                                    <option value="yamaha">Yamaha</option>
+                                    <option value="suzuki">Suzuki</option>
+                                    <option value="kawasaki">Kawasaki</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </td>
+                            <td class="py-1 px-2 block md:table-cell before:content-['Color:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+                                <select name="vehicles[INDEX][color]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline vehicle-input-color" required>
+                                    <option value="">Seleccione...</option>
+                                    @foreach($colors as $color)
+                                    <option value="{{ $color->id }}">{{ $color->name }}</option>
+                                    @endforeach
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </td>
+                            <td class="py-1 px-2 text-center block md:table-cell">
+                                <button type="button" class="remove-vehicle-btn w-full md:w-auto bg-red-600 hover:bg-red-700 md:bg-transparent md:hover:bg-transparent text-white md:text-red-600 font-medium py-1 px-2 rounded-lg focus:outline-none transition-colors duration-200 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-1 md:mr-0" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="md:hidden">Eliminar</span>
+                                </button>
+                            </td>
+                        </tr>
+                    </template>
+                    
                     <!-- Botón de Envío -->
                     <div class="flex items-center justify-center mt-8">
                         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline">
@@ -414,10 +513,11 @@
             }
         }
 
-        // Variables para contar propietarios y residentes
+        // Variables para contar propietarios, residentes, menores y vehículos
         let ownerCount = 0;
         let residentCount = 0;
         let minorCount = 0;
+        let vehicleCount = 0;
         
         // Función para contar elementos reales en el DOM
         function recountElements() {
@@ -433,6 +533,10 @@
             const minorItems = document.querySelectorAll('#minors-container .minor-item');
             minorCount = minorItems.length;
             
+            // Contar vehículos reales en el DOM
+            const vehicleItems = document.querySelectorAll('#vehicles-container .vehicle-item');
+            vehicleCount = vehicleItems.length;
+            
             // Actualizar contadores en la UI
             updateCounters();
         }
@@ -442,6 +546,7 @@
             document.getElementById('owners-counter').textContent = ownerCount;
             document.getElementById('residents-counter').textContent = residentCount;
             document.getElementById('minors-counter').textContent = minorCount;
+            document.getElementById('vehicles-counter').textContent = vehicleCount;
         }
 
         // Función para agregar un nuevo propietario
@@ -649,6 +754,80 @@
         function renumberMinors() {
             const minorRows = document.querySelectorAll('#minors-container .minor-item');
             minorRows.forEach((row, index) => {
+                // Renumerar los inputs y selects
+                const inputs = row.querySelectorAll('input, select');
+                inputs.forEach(input => {
+                    const nameParts = input.name.split('[');
+                    if (nameParts.length > 1) {
+                        input.name = `${nameParts[0]}[${index}]${input.name.substring(input.name.indexOf(']') + 1)}`;
+                    }
+                });
+            });
+        }
+        
+        // Función para agregar un vehículo
+        function addVehicle(index = null) {
+            const newIndex = index !== null ? index : vehicleCount;
+            console.log(`Agregando vehículo con índice ${newIndex}. Contador actual: ${vehicleCount}`);
+            
+            // Obtener el template
+            const template = document.getElementById('vehicle-template');
+            const clone = document.importNode(template.content, true);
+            
+            // Reemplazar el índice placeholder en todos los inputs y selects
+            const inputs = clone.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                const originalName = input.name;
+                input.name = input.name.replace('INDEX', newIndex);
+                console.log(`Campo renombrado de ${originalName} a ${input.name}`);
+                
+                // Agregar un atributo data-index para facilitar la depuración
+                input.setAttribute('data-index', newIndex);
+            });
+            
+            // Agregar evento para eliminar vehículo
+            const removeBtn = clone.querySelector('.remove-vehicle-btn');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function() {
+                    const row = this.closest('.vehicle-item');
+                    if (row) {
+                        row.remove();
+                        recountElements();
+                        reindexVehicles();
+                    }
+                });
+            }
+            
+            // Agregar el nuevo vehículo al contenedor
+            const container = document.getElementById('vehicles-container');
+            container.appendChild(clone);
+            
+            // Actualizar contadores basados en elementos reales en el DOM
+            recountElements();
+            console.log(`Vehículo agregado. Nuevo contador: ${vehicleCount}`);
+            
+            // Devolver el índice del vehículo agregado para referencia
+            return newIndex;
+            
+            // Si estamos agregando un nuevo vehículo manualmente, abrir acordeón y enfocar
+            if (index === null) {
+                const vehiculosBody = document.getElementById('vehiculos-body');
+                if (vehiculosBody.classList.contains('hidden')) {
+                    toggleAccordion('vehiculos-header');
+                }
+                
+                // Enfocar el campo de tipo del nuevo vehículo
+                const vehicleRows = document.querySelectorAll('#vehicles-container .vehicle-item');
+                const lastVehicleRow = vehicleRows[vehicleRows.length - 1];
+                const lastVehicleTypeSelect = lastVehicleRow.querySelector('.vehicle-input-type');
+                lastVehicleTypeSelect.focus();
+            }
+        }
+        
+        // Función para reindexar vehículos
+        function reindexVehicles() {
+            const vehicleRows = document.querySelectorAll('#vehicles-container .vehicle-item');
+            vehicleRows.forEach((row, index) => {
                 // Renumerar los inputs y selects
                 const inputs = row.querySelectorAll('input, select');
                 inputs.forEach(input => {
@@ -996,6 +1175,110 @@
                 @else
                     console.log('El apartamento no tiene menores');
                 @endif
+                
+                // Verificar si el apartamento tiene vehículos
+                @if(isset($apartamento->vehicles) && count($apartamento->vehicles) > 0)
+                    console.log('Vehículos encontrados en el apartamento:', @json($apartamento->vehicles));
+                    
+                    // Cargar vehículos existentes
+                    try {
+                        // Obtener los datos de vehículos directamente del backend
+                        const vehiclesData = [
+                            @foreach($apartamento->vehicles as $index => $vehicle)
+                                {
+                                    id: {{ $vehicle->id }},
+                                    type: "{{ $vehicle->type ?? '' }}",
+                                    license_plate: "{{ $vehicle->license_plate ?? '' }}",
+                                    brand_id: {{ $vehicle->brand_id ?? 'null' }},
+                                    color_id: {{ $vehicle->color_id ?? 'null' }}
+                                }@if(!$loop->last),@endif
+                            @endforeach
+                        ];
+                        
+                        console.log('Vehículos procesados:', vehiclesData);
+                        
+                        if (vehiclesData && vehiclesData.length > 0) {
+                            console.log('Vehículos a cargar:', vehiclesData.length);
+                            
+                            // Limpiar contenedor de vehículos antes de cargar
+                            document.getElementById('vehicles-container').innerHTML = '';
+                            
+                            vehiclesData.forEach((vehicle, index) => {
+                                console.log(`Cargando vehículo ${index}:`, vehicle);
+                                
+                                // Crear un nuevo vehículo con el índice correcto
+                                const addedIndex = addVehicle(index);
+                                console.log(`Vehículo añadido con índice ${addedIndex}, buscando elementos para cargar datos...`);
+                                
+                                // Obtener el vehículo recién añadido
+                                const vehicleRows = document.querySelectorAll('#vehicles-container .vehicle-item');
+                                console.log(`Total de filas de vehículos: ${vehicleRows.length}`);
+                                
+                                // Obtener la última fila añadida
+                                const currentVehicleRow = vehicleRows[vehicleRows.length - 1];
+                                if (!currentVehicleRow) {
+                                    console.error(`No se encontró la fila para el vehículo ${index}`);
+                                    return;
+                                }
+                                
+                                try {
+                                    // Imprimir todos los inputs en la fila para depuración
+                                    const allInputs = currentVehicleRow.querySelectorAll('input, select');
+                                    console.log(`Encontrados ${allInputs.length} campos en la fila del vehículo:`);
+                                    allInputs.forEach(input => {
+                                        console.log(`- Campo: ${input.name}, tipo: ${input.tagName.toLowerCase()}`);
+                                    });
+                                    
+                                    // Llenar los campos - usando selectores más robustos
+                                    const typeSelect = currentVehicleRow.querySelector('select[name^="vehicles["][name$="[type]"]');
+                                    const plateInput = currentVehicleRow.querySelector('input[name^="vehicles["][name$="[license_plate]"]');
+                                    const brandSelect = currentVehicleRow.querySelector('select[name^="vehicles["][name$="[brand]"]');
+                                    const colorSelect = currentVehicleRow.querySelector('select[name^="vehicles["][name$="[color]"]');
+                                    
+                                    if (typeSelect && vehicle.type) {
+                                        typeSelect.value = vehicle.type;
+                                        console.log(`Tipo del vehículo ${index} establecido:`, typeSelect.value);
+                                    } else {
+                                        console.error(`No se encontró el campo de tipo para el vehículo ${index}`);
+                                    }
+                                    
+                                    if (plateInput) {
+                                        plateInput.value = vehicle.license_plate || '';
+                                        console.log(`Placa del vehículo ${index} establecida:`, plateInput.value);
+                                    } else {
+                                        console.error(`No se encontró el campo de placa para el vehículo ${index}`);
+                                    }
+                                    
+                                    if (brandSelect && vehicle.brand_id) {
+                                        brandSelect.value = vehicle.brand_id;
+                                        console.log(`Marca del vehículo ${index} establecida:`, brandSelect.value);
+                                    } else {
+                                        console.error(`No se encontró el campo de marca para el vehículo ${index} o no tiene marca asignada`);
+                                    }
+                                    
+                                    if (colorSelect && vehicle.color_id) {
+                                        colorSelect.value = vehicle.color_id;
+                                        console.log(`Color del vehículo ${index} establecido:`, colorSelect.value);
+                                    } else {
+                                        console.error(`No se encontró el campo de color para el vehículo ${index} o no tiene color asignado`);
+                                    }
+                                    
+                                    console.log('Vehículo cargado correctamente');
+                                } catch (e) {
+                                    console.error('Error al llenar campos del vehículo:', e);
+                                }
+                            });
+                            
+                            updateCounters();
+                        } else {
+                            console.log('No hay vehículos para cargar');
+                        }
+                    } catch (e) {
+                        console.error('Error al cargar vehículos:', e);
+                    }
+                @else
+                    console.log('El apartamento no tiene vehículos');
+                @endif
             @else
                 console.log('No hay apartamento para cargar');
             @endif
@@ -1003,7 +1286,7 @@
             // Actualizar contadores basados en elementos reales en el DOM
             console.log('Actualizando contadores finales...');
             recountElements();
-            console.log('Contadores finales - Propietarios:', ownerCount, 'Residentes:', residentCount, 'Menores:', minorCount);
+            console.log('Contadores finales - Propietarios:', ownerCount, 'Residentes:', residentCount, 'Menores:', minorCount, 'Vehículos:', vehicleCount);
         }
 
         // Inicializar eventos cuando el DOM esté listo
@@ -1038,6 +1321,16 @@
                 const lastMinorRow = minorRows[minorRows.length - 1];
                 const firstInput = lastMinorRow.querySelector('input');
                 if (firstInput) firstInput.focus();
+            });
+            
+            // Inicializar botón para agregar vehículo
+            document.getElementById('add-vehicle-btn').addEventListener('click', function() {
+                addVehicle();
+                // Enfocar el primer select del nuevo vehículo
+                const vehicleRows = document.querySelectorAll('#vehicles-container .vehicle-item');
+                const lastVehicleRow = vehicleRows[vehicleRows.length - 1];
+                const firstSelect = lastVehicleRow.querySelector('select');
+                if (firstSelect) firstSelect.focus();
             });
             
             // Agregar eventos a los encabezados de acordeones
