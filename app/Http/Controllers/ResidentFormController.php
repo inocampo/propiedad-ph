@@ -160,8 +160,7 @@ class ResidentFormController extends Controller
             'residents.*.name' => 'required|string|max:255',
             'residents.*.document' => 'required|string|max:20',
             'residents.*.phone' => 'nullable|string|max:20',
-            'residents.*.email' => 'nullable|email|max:255',
-            'residents.*.parentesco' => 'nullable|exists:relationships,id',
+            'residents.*.relationship_id' => 'nullable|exists:relationships,id',
         ]);
 
         // Buscar o crear el apartamento
@@ -200,14 +199,20 @@ class ResidentFormController extends Controller
             // Eliminar residentes existentes si los hay
             $apartamento->residents()->delete();
             
+            // Log para depuración
+            \Log::info('Datos de residentes recibidos:', $request->residents);
+            
             // Agregar nuevos residentes
             foreach ($request->residents as $residentData) {
+                // Log para cada residente
+                \Log::info('Procesando residente:', $residentData);
+                \Log::info('Valor de parentesco:', ['relationship_id' => $residentData['relationship_id'] ?? 'no definido']);
+                
                 $apartamento->residents()->create([
                     'name' => strtoupper($residentData['name']),
                     'document_number' => $residentData['document'],
                     'phone_number' => $residentData['phone'] ?? null,
-                    'email' => isset($residentData['email']) ? strtolower($residentData['email']) : null,
-                    'relationship_id' => $residentData['parentesco'] ?? null,
+                    'relationship_id' => $residentData['relationship_id'] ?? null,
                 ]);
             }
         }

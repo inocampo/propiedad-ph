@@ -14,7 +14,7 @@ class Resident extends Model
         'name',
         'document_number',
         'phone_number',
-        'email',
+        'relationship_id',
     ];
 
     public function apartment()

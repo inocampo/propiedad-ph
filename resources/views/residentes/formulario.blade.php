@@ -232,7 +232,7 @@
                                 <input type="tel" name="residents[INDEX][phone]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                             </td>
                             <td class="py-2 px-4">
-                                <select name="residents[INDEX][parentesco]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <select name="residents[INDEX][relationship_id]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                     <option value="">Seleccionar...</option>
                                     @foreach($relationships as $relationship)
                                         <option value="{{ $relationship->id }}">{{ $relationship->name }}</option>
@@ -619,7 +619,7 @@
                                     const nameInput = currentResidentRow.querySelector('input[name^="residents["][name$="[name]"]');
                                     const documentInput = currentResidentRow.querySelector('input[name^="residents["][name$="[document]"]');
                                     const phoneInput = currentResidentRow.querySelector('input[name^="residents["][name$="[phone]"]');
-                                    const parentescoSelect = currentResidentRow.querySelector('select[name^="residents["][name$="[parentesco]"]');
+                                    const parentescoSelect = currentResidentRow.querySelector('select[name^="residents["][name$="[relationship_id]"]');
                                     
                                     if (nameInput) {
                                         nameInput.value = resident.name || '';
