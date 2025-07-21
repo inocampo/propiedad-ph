@@ -67,82 +67,104 @@
                     @csrf
                     <input type="hidden" name="number" value="{{ $apartamento ? $apartamento->number : request()->route('number') }}">
                     
-                    <!-- Sección de Información Principal -->
-                    <div class="mb-8">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b">Información del Residente Principal</h2>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label for="resident_name" class="block text-gray-700 text-sm font-bold mb-2">Nombre Completo: <span class="text-red-600">*</span></label>
-                                <input type="text" id="resident_name" name="resident_name" 
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase"
-                                    value="{{ $apartamento ? $apartamento->resident_name : old('resident_name') }}" required>
-                            </div>
-                            
-                            <div>
-                                <label for="resident_document" class="block text-gray-700 text-sm font-bold mb-2">Cédula: <span class="text-red-600">*</span></label>
-                                <input type="text" id="resident_document" name="resident_document" 
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    value="{{ $apartamento ? $apartamento->resident_document : old('resident_document') }}" required>
-                            </div>
-                            
-                            <div>
-                                <label for="resident_phone" class="block text-gray-700 text-sm font-bold mb-2">Celular: <span class="text-red-600">*</span></label>
-                                <input type="tel" id="resident_phone" name="resident_phone" 
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    value="{{ $apartamento ? $apartamento->resident_phone : old('resident_phone') }}" required>
-                            </div>
-                            
-                            <div>
-                                <label for="resident_email" class="block text-gray-700 text-sm font-bold mb-2">Email: <span class="text-red-600">*</span></label>
-                                <input type="email" id="resident_email" name="resident_email" 
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline lowercase"
-                                    value="{{ $apartamento ? $apartamento->resident_email : old('resident_email') }}" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Sección de Información Adicional -->
-                    <div class="mb-8">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b">Información Adicional</h2>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                            <div class="flex items-center">
-                                <input type="checkbox" id="received_manual" name="received_manual" value="1" 
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                                    {{ $apartamento && $apartamento->received_manual ? 'checked' : '' }}>
-                                <label for="received_manual" class="ml-2 text-sm font-medium text-gray-700">¿Recibió el manual de convivencia?</label>
-                            </div>
-                            
-                            <div class="flex items-center">
-                                <input type="checkbox" id="has_bicycles" name="has_bicycles" value="1" 
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                                    {{ $apartamento && $apartamento->has_bicycles ? 'checked' : '' }}
-                                    onchange="toggleBicyclesCount()">
-                                <label for="has_bicycles" class="ml-2 text-sm font-medium text-gray-700">¿Tienen bicicletas?</label>
-                            </div>
-                            
-                            <div id="bicycles_count_container" class="{{ ($apartamento && $apartamento->has_bicycles) ? '' : 'hidden' }}">
-                                <label for="bicycles_count" class="block text-gray-700 text-sm font-bold mb-2">Cantidad de bicicletas:</label>
-                                <input type="number" id="bicycles_count" name="bicycles_count" min="1" 
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    value="{{ $apartamento ? $apartamento->bicycles_count : old('bicycles_count', 1) }}">
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label for="observations" class="block text-gray-700 text-sm font-bold mb-2">Observaciones:</label>
-                            <textarea id="observations" name="observations" rows="3" 
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ $apartamento ? $apartamento->observations : old('observations') }}</textarea>
-                        </div>
-                    </div>
-                    
                     <!-- Secciones con Acordeones -->
-                    <div class="mb-8">
+                    <div class="space-y-4">
+                        <!-- Acordeón de Información General -->
+                        <div class="accordion-section mb-4 border rounded-lg overflow-hidden bg-white shadow-sm">
+                            <div class="accordion-header cursor-pointer bg-blue-50 px-4 py-3 flex justify-between items-center" id="info-general-header">
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    <span class="font-medium text-lg">Información General</span>
+                                </div>
+                                <button type="button" class="accordion-toggle focus:outline-none" onclick="toggleAccordion('info-general-header')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="accordion-body p-4" id="info-general-body">
+                                <!-- Información del Residente Principal -->
+                                <div class="mb-6">
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-3 pb-2 border-b">Información del Residente Principal</h3>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="resident_name" class="block text-gray-700 text-sm font-bold mb-2">Nombre Completo: <span class="text-red-600">*</span></label>
+                                            <input type="text" id="resident_name" name="resident_name" 
+                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase"
+                                                value="{{ $apartamento ? $apartamento->resident_name : old('resident_name') }}" required>
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="resident_document" class="block text-gray-700 text-sm font-bold mb-2">Cédula: <span class="text-red-600">*</span></label>
+                                            <input type="text" id="resident_document" name="resident_document" 
+                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                value="{{ $apartamento ? $apartamento->resident_document : old('resident_document') }}" required>
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="resident_phone" class="block text-gray-700 text-sm font-bold mb-2">Celular: <span class="text-red-600">*</span></label>
+                                            <input type="tel" id="resident_phone" name="resident_phone" 
+                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                value="{{ $apartamento ? $apartamento->resident_phone : old('resident_phone') }}" required>
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="resident_email" class="block text-gray-700 text-sm font-bold mb-2">Email: <span class="text-red-600">*</span></label>
+                                            <input type="email" id="resident_email" name="resident_email" 
+                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline lowercase"
+                                                value="{{ $apartamento ? $apartamento->resident_email : old('resident_email') }}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Información Adicional -->
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-3 pb-2 border-b">Información Adicional</h3>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="received_manual" name="received_manual" value="1" 
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                                {{ $apartamento && $apartamento->received_manual ? 'checked' : '' }}>
+                                            <label for="received_manual" class="ml-2 text-sm font-medium text-gray-700">¿Recibió el manual de convivencia?</label>
+                                        </div>
+                                        
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="has_bicycles" name="has_bicycles" value="1" 
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                                {{ $apartamento && $apartamento->has_bicycles ? 'checked' : '' }}
+                                                onchange="toggleBicyclesCount()">
+                                            <label for="has_bicycles" class="ml-2 text-sm font-medium text-gray-700">¿Tienen bicicletas?</label>
+                                        </div>
+                                        
+                                        <div id="bicycles_count_container" class="{{ ($apartamento && $apartamento->has_bicycles) ? '' : 'hidden' }}">
+                                            <label for="bicycles_count" class="block text-gray-700 text-sm font-bold mb-2">Cantidad de bicicletas:</label>
+                                            <input type="number" id="bicycles_count" name="bicycles_count" min="1" 
+                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                value="{{ $apartamento ? $apartamento->bicycles_count : old('bicycles_count', 1) }}">
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label for="observations" class="block text-gray-700 text-sm font-bold mb-2">Observaciones:</label>
+                                        <textarea id="observations" name="observations" rows="3" 
+                                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ $apartamento ? $apartamento->observations : old('observations') }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+
                         <!-- Acordeón de Propietarios -->
                         <div class="accordion-section mb-4 border rounded-lg overflow-hidden bg-white shadow-sm">
                             <div class="accordion-header cursor-pointer bg-blue-50 px-4 py-3 flex justify-between items-center" id="propietarios-header">
                                 <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
                                     <span class="font-medium text-lg">Propietarios</span>
                                     <span class="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full ml-3" id="owners-counter">0</span>
                                 </div>
@@ -189,6 +211,9 @@
                         <div class="accordion-section mb-4 border rounded-lg overflow-hidden bg-white shadow-sm">
                             <div class="accordion-header cursor-pointer bg-blue-50 px-4 py-3 flex justify-between items-center" id="residentes-header">
                                 <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
                                     <span class="font-medium text-lg">Residentes</span>
                                     <span class="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full ml-3" id="residents-counter">0</span>
                                 </div>
@@ -235,6 +260,9 @@
                         <div class="accordion-section mb-4 border rounded-lg overflow-hidden bg-white shadow-sm">
                             <div class="accordion-header cursor-pointer bg-blue-50 px-4 py-3 flex justify-between items-center" id="menores-header">
                                 <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
                                     <span class="font-medium text-lg">Menores de Edad</span>
                                     <span class="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full ml-3" id="minors-counter">0</span>
                                 </div>
