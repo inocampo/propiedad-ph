@@ -637,7 +637,24 @@
             const header = document.getElementById(headerId);
             const body = header.nextElementSibling;
             const icon = header.querySelector('.accordion-toggle svg');
+            const isOpening = body.classList.contains('hidden');
             
+            // Si estamos abriendo este acordeón, cerramos todos los demás primero
+            if (isOpening) {
+                // Cerrar todos los acordeones
+                const allAccordionBodies = document.querySelectorAll('.accordion-body');
+                const allAccordionIcons = document.querySelectorAll('.accordion-toggle svg');
+                
+                allAccordionBodies.forEach(accordionBody => {
+                    accordionBody.classList.add('hidden');
+                });
+                
+                allAccordionIcons.forEach(accordionIcon => {
+                    accordionIcon.classList.remove('rotate-180');
+                });
+            }
+            
+            // Alternar el estado del acordeón actual
             body.classList.toggle('hidden');
             icon.classList.toggle('rotate-180');
         }
