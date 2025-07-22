@@ -7,7 +7,7 @@
                 <th class="py-3 px-4 text-left w-[20%]">Placa</th>
                 <th class="py-3 px-4 text-left w-[30%]">Marca</th>
                 <th class="py-3 px-4 text-left w-[30%]">Color</th>
-                <th class="py-3 px-2 text-center w-[10%]">
+                <th class="py-3 px-2 text-center w-[5%]">
                     <span class="sr-only">Acciones</span>
                 </th>
             </tr>

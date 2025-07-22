@@ -7,7 +7,7 @@
                 <th class="py-3 px-4 text-left">Cédula</th>
                 <th class="py-3 px-4 text-left">Celular</th>
                 <th class="py-3 px-4 text-left">Parentesco</th>
-                <th class="py-3 px-2 text-center w-[10%]">
+                <th class="py-3 px-2 text-center w-[5%]">
                     <span class="sr-only">Acciones</span>
                 </th>
             </tr>

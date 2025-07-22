@@ -43,13 +43,17 @@ class ApartmentResource extends Resource
                                             Forms\Components\Select::make('torre')
                                                 ->label('Torre')
                                                 ->options(array_combine(range('A', 'M'), range('A', 'M')))
-                                                ->required()
+                                                ->required(fn (string $operation): bool => $operation === 'create')
+                                                ->disabled(fn (string $operation): bool => $operation === 'edit')
                                                 ->live()
-                                                ->afterStateUpdated(function ($set, $state, $get) {
-                                                    $torre = $state ?? '';
-                                                    $piso = $get('piso') ?? '';
-                                                    $apto = $get('apto') ?? '';
-                                                    $set('number', $torre . $piso . $apto);
+                                                ->afterStateUpdated(function ($set, $state, $get) use ($form) {
+                                                    // Solo actualizar en creación
+                                                    if ($form->getOperation() === 'create') {
+                                                        $torre = $state ?? '';
+                                                        $piso = $get('piso') ?? '';
+                                                        $apto = $get('apto') ?? '';
+                                                        $set('number', $torre . $piso . $apto);
+                                                    }
                                                 }),
                                             Forms\Components\Select::make('piso')
                                                 ->label('Piso')
@@ -60,13 +64,17 @@ class ApartmentResource extends Resource
                                                     '4' => '4',
                                                     '5' => '5',
                                                 ])
-                                                ->required()
+                                                ->required(fn (string $operation): bool => $operation === 'create')
+                                                ->disabled(fn (string $operation): bool => $operation === 'edit')
                                                 ->live()
-                                                ->afterStateUpdated(function ($set, $state, $get) {
-                                                    $torre = $get('torre') ?? '';
-                                                    $piso = $state ?? '';
-                                                    $apto = $get('apto') ?? '';
-                                                    $set('number', $torre . $piso . $apto);
+                                                ->afterStateUpdated(function ($set, $state, $get) use ($form) {
+                                                    // Solo actualizar en creación
+                                                    if ($form->getOperation() === 'create') {
+                                                        $torre = $get('torre') ?? '';
+                                                        $piso = $state ?? '';
+                                                        $apto = $get('apto') ?? '';
+                                                        $set('number', $torre . $piso . $apto);
+                                                    }
                                                 }),
                                             Forms\Components\Select::make('apto')
                                                 ->label('Apto')
@@ -76,13 +84,17 @@ class ApartmentResource extends Resource
                                                     '03' => '03',
                                                     '04' => '04',
                                                 ])
-                                                ->required()
+                                                ->required(fn (string $operation): bool => $operation === 'create')
+                                                ->disabled(fn (string $operation): bool => $operation === 'edit')
                                                 ->live()
-                                                ->afterStateUpdated(function ($set, $state, $get) {
-                                                    $torre = $get('torre') ?? '';
-                                                    $piso = $get('piso') ?? '';
-                                                    $apto = $state ?? '';
-                                                    $set('number', $torre . $piso . $apto);
+                                                ->afterStateUpdated(function ($set, $state, $get) use ($form) {
+                                                    // Solo actualizar en creación
+                                                    if ($form->getOperation() === 'create') {
+                                                        $torre = $get('torre') ?? '';
+                                                        $piso = $get('piso') ?? '';
+                                                        $apto = $state ?? '';
+                                                        $set('number', $torre . $piso . $apto);
+                                                    }
                                                 }),
                                             Forms\Components\TextInput::make('number')
                                                 ->label('Código Apartamento')
