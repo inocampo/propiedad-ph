@@ -1,0 +1,57 @@
+<!-- Template para nuevos vehículos (oculto) -->
+<template id="vehicle-template">
+    <tr class="vehicle-item repeater-row border-b hover:bg-gray-50 block md:table-row mb-6 md:mb-0">
+        <td class="repeater-cell py-1 px-2 block md:table-cell before:content-['Tipo:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+            <select name="vehicles[INDEX][type]" 
+                    class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline vehicle-input-type" 
+                    required
+                    aria-label="Tipo de vehículo">
+                <option value="">Seleccione tipo...</option>
+                <option value="carro">Carro</option>
+                <option value="moto">Moto</option>
+            </select>
+        </td>
+        <td class="repeater-cell py-1 px-2 block md:table-cell before:content-['Placa:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+            <input type="text" 
+                   name="vehicles[INDEX][license_plate]" 
+                   class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase vehicle-input-plate" 
+                   placeholder="ABC123"
+                   required 
+                   aria-label="Placa del vehículo">
+        </td>
+        <td class="repeater-cell py-1 px-2 block md:table-cell before:content-['Marca:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+            <select name="vehicles[INDEX][brand_id]" 
+                    class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline vehicle-input-brand" 
+                    required
+                    aria-label="Marca del vehículo">
+                <option value="">Seleccione marca...</option>
+                <!-- Las opciones de marcas se cargarán dinámicamente desde window.brandsData -->
+            </select>
+        </td>
+        <td class="repeater-cell py-1 px-2 block md:table-cell before:content-['Color:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+            <select name="vehicles[INDEX][color_id]" 
+                    class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline vehicle-input-color" 
+                    required
+                    aria-label="Color del vehículo">
+                <option value="">Seleccione color...</option>
+                <!-- Las opciones de colores se cargarán dinámicamente desde window.colorsData -->
+            </select>
+        </td>
+        <td class="repeater-cell py-1 px-2 text-center block md:table-cell">
+            <button type="button" 
+                    class="remove-btn remove-vehicle-btn w-full md:w-auto bg-red-600 hover:bg-red-700 md:bg-transparent md:hover:bg-transparent text-white md:text-red-600 font-medium py-1 px-2 rounded-lg focus:outline-none transition-colors duration-200 flex items-center justify-center"
+                    aria-label="Eliminar vehículo">
+                <svg xmlns="http://www.w3.org/2000/svg" 
+                     class="h-5 w-5 inline mr-1 md:mr-0" 
+                     viewBox="0 0 20 20" 
+                     fill="currentColor"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd" 
+                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" 
+                          clip-rule="evenodd" />
+                </svg>
+                <span class="md:hidden">Eliminar</span>
+            </button>
+        </td>
+    </tr>
+</template>

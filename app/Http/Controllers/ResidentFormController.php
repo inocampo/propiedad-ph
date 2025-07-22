@@ -27,7 +27,7 @@ class ResidentFormController extends Controller
     {
         // Cargar relaciones si el apartamento existe
         if ($apartamento) {
-            $apartamento->load(['owners', 'residents.relationship', 'minors', 'vehicles', 'pets']);
+            $apartamento->load(['owners', 'residents.relationship', 'minors', 'vehicles', 'pets.breed']);
         }
         
         return [
@@ -172,18 +172,18 @@ class ResidentFormController extends Controller
             'minors.*.age' => 'nullable|integer|min:0|max:17',
             'minors.*.gender' => 'nullable|string|in:niño,niña',
             
-            // Vehículos
+            // Vehículos - ✅ CORREGIDO: brand_id y color_id
             'vehicles' => 'nullable|array',
             'vehicles.*.type' => 'required|string|in:carro,moto',
             'vehicles.*.license_plate' => 'required|string|max:10',
-            'vehicles.*.brand' => 'nullable|exists:brands,id',
-            'vehicles.*.color' => 'nullable|exists:colors,id',
+            'vehicles.*.brand_id' => 'nullable|exists:brands,id',
+            'vehicles.*.color_id' => 'nullable|exists:colors,id',
             
-            // Mascotas
+            // Mascotas - ✅ CORREGIDO: breed_id
             'pets' => 'nullable|array',
             'pets.*.name' => 'required|string|max:255',
             'pets.*.type' => 'required|string|in:perro,gato',
-            'pets.*.breed' => 'nullable|exists:breeds,id',
+            'pets.*.breed_id' => 'nullable|exists:breeds,id',
         ]);
 
         // Buscar o crear el apartamento
@@ -242,7 +242,7 @@ class ResidentFormController extends Controller
             }
         }
         
-        // Procesar vehículos
+        // Procesar vehículos - ✅ CORREGIDO: brand_id y color_id
         if ($request->has('vehicles')) {
             $apartamento->vehicles()->delete();
             
@@ -250,13 +250,13 @@ class ResidentFormController extends Controller
                 $apartamento->vehicles()->create([
                     'type' => $vehicleData['type'],
                     'license_plate' => strtoupper($vehicleData['license_plate']),
-                    'brand_id' => $vehicleData['brand'] ?? null,
-                    'color_id' => $vehicleData['color'] ?? null,
+                    'brand_id' => $vehicleData['brand_id'] ?? null,
+                    'color_id' => $vehicleData['color_id'] ?? null,
                 ]);
             }
         }
         
-        // ✅ PROCESAR MASCOTAS
+        // ✅ PROCESAR MASCOTAS - CORREGIDO: breed_id
         if ($request->has('pets')) {
             $apartamento->pets()->delete();
             
@@ -264,7 +264,7 @@ class ResidentFormController extends Controller
                 $apartamento->pets()->create([
                     'name' => strtoupper($petData['name']),
                     'type' => $petData['type'],
-                    'breed_id' => $petData['breed'] ?? null,
+                    'breed_id' => $petData['breed_id'] ?? null,
                 ]);
             }
         }

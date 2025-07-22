@@ -1,0 +1,325 @@
+/* Estilos para controlar los anchos de las columnas en las tablas */
+@media (min-width: 768px) {
+    /* Tabla de propietarios */
+    #owners-container td:nth-child(1),
+    #owners-container th:nth-child(1) { 
+        width: 30%; 
+    }
+    
+    #owners-container td:nth-child(2),
+    #owners-container th:nth-child(2) { 
+        width: 20%; 
+    }
+    
+    #owners-container td:nth-child(3),
+    #owners-container th:nth-child(3) { 
+        width: 20%; 
+    }
+    
+    #owners-container td:nth-child(4),
+    #owners-container th:nth-child(4) { 
+        width: 30%; 
+    }
+    
+    #owners-container td:nth-child(5),
+    #owners-container th:nth-child(5) { 
+        width: 10%; 
+    }
+    
+    /* Tabla de residentes */
+    #residents-container td:nth-child(1),
+    #residents-container th:nth-child(1) { 
+        width: 30%; 
+    }
+    
+    #residents-container td:nth-child(2),
+    #residents-container th:nth-child(2) { 
+        width: 20%; 
+    }
+    
+    #residents-container td:nth-child(3),
+    #residents-container th:nth-child(3) { 
+        width: 20%; 
+    }
+    
+    #residents-container td:nth-child(4),
+    #residents-container th:nth-child(4) { 
+        width: 30%; 
+    }
+    
+    #residents-container td:nth-child(5),
+    #residents-container th:nth-child(5) { 
+        width: 10%; 
+    }
+    
+    /* Tabla de menores */
+    #minors-container td:nth-child(1),
+    #minors-container th:nth-child(1) { 
+        width: 40%; 
+    }
+    
+    #minors-container td:nth-child(2),
+    #minors-container th:nth-child(2) { 
+        width: 20%; 
+    }
+    
+    #minors-container td:nth-child(3),
+    #minors-container th:nth-child(3) { 
+        width: 30%; 
+    }
+    
+    #minors-container td:nth-child(4),
+    #minors-container th:nth-child(4) { 
+        width: 10%; 
+    }
+    
+    /* Tabla de vehículos */
+    #vehicles-container td:nth-child(1),
+    #vehicles-container th:nth-child(1) { 
+        width: 20%; 
+    }
+    
+    #vehicles-container td:nth-child(2),
+    #vehicles-container th:nth-child(2) { 
+        width: 20%; 
+    }
+    
+    #vehicles-container td:nth-child(3),
+    #vehicles-container th:nth-child(3) { 
+        width: 30%; 
+    }
+    
+    #vehicles-container td:nth-child(4),
+    #vehicles-container th:nth-child(4) { 
+        width: 30%; 
+    }
+    
+    #vehicles-container td:nth-child(5),
+    #vehicles-container th:nth-child(5) { 
+        width: 10%; 
+    }
+    
+    /* Tabla de mascotas */
+    #pets-container td:nth-child(1),
+    #pets-container th:nth-child(1) { 
+        width: 30%; 
+    }
+    
+    #pets-container td:nth-child(2),
+    #pets-container th:nth-child(2) { 
+        width: 20%; 
+    }
+    
+    #pets-container td:nth-child(3),
+    #pets-container th:nth-child(3) { 
+        width: 40%; 
+    }
+    
+    #pets-container td:nth-child(4),
+    #pets-container th:nth-child(4) { 
+        width: 10%; 
+    }
+}
+
+/* Estilos para los campos de los repeaters */
+.repeater-field {
+    font-size: 0.875rem; /* text-sm */
+    padding-top: 0.25rem; /* py-1 */
+    padding-bottom: 0.25rem;
+}
+
+/* Reducir el tamaño de fuente y padding en los controles de los repeaters */
+#owners-container input, 
+#owners-container select,
+#residents-container input, 
+#residents-container select,
+#minors-container input, 
+#minors-container select,
+#vehicles-container input, 
+#vehicles-container select,
+#pets-container input, 
+#pets-container select {
+    font-size: 0.8rem; /* text-sm */
+    padding-top: 0.25rem; /* py-1 */
+    padding-bottom: 0.25rem;
+}
+
+/* Estilos para los botones de eliminación en modo responsivo */
+@media (max-width: 767px) {
+    .remove-btn {
+        background-color: #dc2626; /* bg-red-600 */
+        color: white;
+        width: 100%;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        transition: background-color 0.2s;
+    }
+    
+    .remove-btn:hover {
+        background-color: #b91c1c; /* bg-red-700 */
+    }
+}
+
+@media (min-width: 768px) {
+    .remove-btn {
+        background-color: transparent;
+        color: #dc2626; /* text-red-600 */
+        width: auto;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        transition: background-color 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .remove-btn:hover {
+        background-color: transparent;
+        color: #b91c1c; /* text-red-700 */
+    }
+}
+
+/* Estilos para las filas de los repeaters en modo responsivo */
+@media (max-width: 767px) {
+    .repeater-row {
+        display: block;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        background-color: #f9fafb;
+    }
+    
+    .repeater-cell {
+        display: block;
+        padding: 0.25rem 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    .repeater-cell:before {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.25rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .repeater-row {
+        display: table-row;
+        margin-bottom: 0;
+        padding: 0;
+        border: none;
+        background-color: transparent;
+    }
+    
+    .repeater-row:hover {
+        background-color: #f9fafb;
+    }
+    
+    .repeater-cell {
+        display: table-cell;
+        padding: 0.25rem 0.5rem;
+        margin-bottom: 0;
+    }
+    
+    .repeater-cell:before {
+        display: none;
+    }
+}
+
+/* Animaciones para los acordeones */
+.accordion-toggle svg {
+    transition: transform 0.2s ease-in-out;
+}
+
+.accordion-toggle svg.rotate-180 {
+    transform: rotate(180deg);
+}
+
+.accordion-body {
+    transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+/* Estilos para los campos obligatorios */
+.required-field:after {
+    content: " *";
+    color: #dc2626;
+}
+
+/* Estilos para los contadores */
+.counter-badge {
+    font-size: 0.875rem;
+    background-color: #dbeafe;
+    color: #1e40af;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    margin-left: 0.75rem;
+    font-weight: 500;
+}
+
+/* Estilos para las tablas responsivas */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Mejoras de accesibilidad */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Estados de focus mejorados */
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+button:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Estilos para mensajes de error */
+.error-message {
+    color: #dc2626;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Estilos para campos con errores */
+.field-error {
+    border-color: #dc2626;
+    background-color: #fef2f2;
+}
+
+/* Estilos para el loader/spinner */
+.spinner {
+    border: 2px solid #f3f4f6;
+    border-top: 2px solid #3b82f6;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
