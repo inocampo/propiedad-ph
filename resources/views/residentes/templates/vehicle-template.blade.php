@@ -1,7 +1,7 @@
 <!-- Template para nuevos vehículos (oculto) -->
 <template id="vehicle-template">
     <tr class="vehicle-item repeater-row border-b hover:bg-gray-50 block md:table-row mb-6 md:mb-0">
-        <td class="repeater-cell py-1 px-2 block md:table-cell before:content-['Tipo:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+        <td class="repeater-cell py-1 block md:table-cell before:content-['Tipo:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <select name="vehicles[INDEX][type]" 
                     class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline vehicle-input-type" 
                     required
@@ -11,7 +11,7 @@
                 <option value="moto">Moto</option>
             </select>
         </td>
-        <td class="repeater-cell py-1 px-2 block md:table-cell before:content-['Placa:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+        <td class="repeater-cell py-1 block md:table-cell before:content-['Placa:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <input type="text" 
                    name="vehicles[INDEX][license_plate]" 
                    class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase vehicle-input-plate" 
@@ -19,7 +19,7 @@
                    required 
                    aria-label="Placa del vehículo">
         </td>
-        <td class="repeater-cell py-1 px-2 block md:table-cell before:content-['Marca:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+        <td class="repeater-cell py-1 block md:table-cell before:content-['Marca:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <select name="vehicles[INDEX][brand_id]" 
                     class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline vehicle-input-brand" 
                     required
@@ -28,7 +28,7 @@
                 <!-- Las opciones de marcas se cargarán dinámicamente desde window.brandsData -->
             </select>
         </td>
-        <td class="repeater-cell py-1 px-2 block md:table-cell before:content-['Color:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+        <td class="repeater-cell py-1 block md:table-cell before:content-['Color:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <select name="vehicles[INDEX][color_id]" 
                     class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline vehicle-input-color" 
                     required
@@ -37,7 +37,7 @@
                 <!-- Las opciones de colores se cargarán dinámicamente desde window.colorsData -->
             </select>
         </td>
-        <td class="repeater-cell py-1 px-2 text-center block md:table-cell">
+        <td class="repeater-cell py-1 text-center block md:table-cell">
             <button type="button" 
                     class="remove-btn remove-vehicle-btn w-full md:w-auto bg-red-600 hover:bg-red-700 md:bg-transparent md:hover:bg-transparent text-white md:text-red-600 font-medium py-1 px-2 rounded-lg focus:outline-none transition-colors duration-200 flex items-center justify-center"
                     aria-label="Eliminar vehículo">
