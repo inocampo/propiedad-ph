@@ -4,14 +4,14 @@
         <td class="repeater-cell py-1 block md:table-cell before:content-['Nombre:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <input type="text" 
                    name="pets[INDEX][name]" 
-                   class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase pet-input-name" 
+                   class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase pet-input-name bg-yellow-50 focus:bg-white" 
                    placeholder="Nombre de la mascota"
                    required 
                    aria-label="Nombre de la mascota">
         </td>
         <td class="repeater-cell py-1 block md:table-cell before:content-['Tipo:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <select name="pets[INDEX][type]" 
-                    class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pet-input-type" 
+                    class="repeater-field shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pet-input-type bg-yellow-50 focus:bg-white" 
                     required
                     aria-label="Tipo de mascota">
                 <option value="">Seleccionar tipo...</option>
@@ -21,7 +21,7 @@
         </td>
         <td class="repeater-cell py-1 block md:table-cell before:content-['Raza:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <select name="pets[INDEX][breed_id]" 
-                    class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pet-input-breed" 
+                    class="repeater-field shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pet-input-breed bg-yellow-50 focus:bg-white" 
                     required
                     aria-label="Raza de la mascota">
                 <option value="">Seleccionar raza...</option>

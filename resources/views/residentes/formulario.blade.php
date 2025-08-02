@@ -120,9 +120,10 @@
                         <div class="accordion-section mb-4 border rounded-lg overflow-hidden bg-white shadow-sm">
                             <div class="accordion-header cursor-pointer bg-blue-50 px-4 py-3 flex justify-between items-center" id="vehiculos-header">
                                 <div class="flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m-4 6H4m0 0l4 4m-4-4l4-4" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2 2h8a1 1 0 001-1z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h2a1 1 0 001-1V7a1 1 0 00-1-1h-2" />
                                     </svg>
                                     <span class="font-medium text-lg">Vehículos</span>
                                     <span class="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full ml-3" id="vehicles-counter">0</span>
@@ -202,7 +203,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
         </svg>
-        Guardar y Continuar Editando
+        Guardar y Continuar
     </button>
     
                         <!-- Botón: Guardar y Salir -->

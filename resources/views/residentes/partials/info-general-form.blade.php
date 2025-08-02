@@ -8,7 +8,7 @@
             <input type="text" 
                    id="resident_name" 
                    name="resident_name" 
-                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase"
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase bg-yellow-50 focus:bg-white"
                    value="{{ $apartamento ? $apartamento->resident_name : old('resident_name') }}" 
                    required>
         </div>
@@ -18,7 +18,7 @@
             <input type="text" 
                    id="resident_document" 
                    name="resident_document" 
-                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-yellow-50 focus:bg-white"
                    value="{{ $apartamento ? $apartamento->resident_document : old('resident_document') }}" 
                    required>
         </div>
@@ -28,7 +28,7 @@
             <input type="tel" 
                    id="resident_phone" 
                    name="resident_phone" 
-                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-yellow-50 focus:bg-white"
                    value="{{ $apartamento ? $apartamento->resident_phone : old('resident_phone') }}" 
                    required>
         </div>
@@ -38,7 +38,7 @@
             <input type="email" 
                    id="resident_email" 
                    name="resident_email" 
-                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline lowercase"
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline lowercase bg-yellow-50 focus:bg-white"
                    value="{{ $apartamento ? $apartamento->resident_email : old('resident_email') }}" 
                    required>
         </div>
@@ -55,9 +55,8 @@
                    id="received_manual" 
                    name="received_manual" 
                    value="1" 
-                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                   {{ $apartamento && $apartamento->received_manual ? 'checked' : '' }}>
-            <label for="received_manual" class="ml-2 text-sm font-medium text-gray-700">¿Recibió el manual de convivencia?</label>
+                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+            <label for="received_manual" class="ml-2 text-sm font-medium text-gray-700">Recibí el manual de convivencia</label>
         </div>
         
         <div class="flex items-center">
@@ -76,7 +75,7 @@
                    id="bicycles_count" 
                    name="bicycles_count" 
                    min="1" 
-                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-yellow-50 focus:bg-white"
                    value="{{ $apartamento ? $apartamento->bicycles_count : old('bicycles_count', 1) }}">
         </div>
     </div>

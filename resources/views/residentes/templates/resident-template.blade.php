@@ -4,7 +4,7 @@
         <td class="repeater-cell py-1 block md:table-cell before:content-['Nombre_Completo:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <input type="text" 
                    name="residents[INDEX][name]" 
-                   class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase resident-input-name" 
+                   class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase resident-input-name bg-yellow-50 focus:bg-white" 
                    placeholder="Nombre completo del residente"
                    required 
                    aria-label="Nombre completo del residente">
@@ -12,7 +12,7 @@
         <td class="repeater-cell py-1 block md:table-cell before:content-['Cédula:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <input type="text" 
                    name="residents[INDEX][document]" 
-                   class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                   class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-yellow-50 focus:bg-white" 
                    placeholder="Número de cédula"
                    required 
                    aria-label="Número de cédula">
@@ -26,8 +26,9 @@
         </td>
         <td class="repeater-cell py-1 block md:table-cell before:content-['Parentesco:'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <select name="residents[INDEX][relationship_id]" 
-                    class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    aria-label="Parentesco o relación">
+                    class="repeater-field shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-yellow-50 focus:bg-white"
+                    aria-label="Parentesco o relación"
+                    required>
                 <option value="">Seleccionar parentesco...</option>
                 @if(isset($relationships))
                     @foreach($relationships as $relationship)
