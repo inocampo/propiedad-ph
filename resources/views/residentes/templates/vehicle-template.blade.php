@@ -1,7 +1,7 @@
 <!-- Template para nuevos vehículos (oculto) -->
 <template id="vehicle-template">
     <tr class="vehicle-item repeater-row border-b hover:bg-gray-50 block md:table-row mb-6 md:mb-0">
-        <td class="repeater-cell py-1 block md:table-cell before:content-['Tipo:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+        <td class="repeater-cell py-1 block md:table-cell before:content-['Tipo:'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <select name="vehicles[INDEX][type]" 
                     class="repeater-field shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline vehicle-input-type bg-yellow-50 focus:bg-white" 
                     required
@@ -11,7 +11,7 @@
                 <option value="moto">Moto</option>
             </select>
         </td>
-        <td class="repeater-cell py-1 block md:table-cell before:content-['Placa:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+        <td class="repeater-cell py-1 block md:table-cell before:content-['Placa:'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <input type="text" 
                    name="vehicles[INDEX][license_plate]" 
                    class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase vehicle-input-plate bg-yellow-50 focus:bg-white" 
@@ -19,22 +19,26 @@
                    required 
                    aria-label="Placa del vehículo">
         </td>
-        <td class="repeater-cell py-1 block md:table-cell before:content-['Marca:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+        <td class="repeater-cell py-1 block md:table-cell before:content-['Marca:'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <select name="vehicles[INDEX][brand_id]" 
-                    class="repeater-field shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline vehicle-input-brand bg-yellow-50 focus:bg-white" 
+                    class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-yellow-50 focus:bg-white"
                     required
                     aria-label="Marca del vehículo">
-                <option value="">Seleccione marca...</option>
-                <!-- Las opciones de marcas se cargarán dinámicamente desde window.brandsData -->
+                <option value="" disabled selected>Seleccione una marca</option>
+                @foreach($brands as $brand)
+                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                @endforeach
             </select>
         </td>
-        <td class="repeater-cell py-1 block md:table-cell before:content-['Color:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+        <td class="repeater-cell py-1 block md:table-cell before:content-['Color:'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <select name="vehicles[INDEX][color_id]" 
-                    class="repeater-field shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline vehicle-input-color bg-yellow-50 focus:bg-white" 
+                    class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-yellow-50 focus:bg-white"
                     required
                     aria-label="Color del vehículo">
-                <option value="">Seleccione color...</option>
-                <!-- Las opciones de colores se cargarán dinámicamente desde window.colorsData -->
+                <option value="" disabled selected>Seleccione un color</option>
+                @foreach($colors as $color)
+                    <option value="{{ $color->id }}">{{ $color->name }}</option>
+                @endforeach
             </select>
         </td>
         <td class="repeater-cell py-1 text-center block md:table-cell">

@@ -1,7 +1,7 @@
 <!-- Template para nuevas mascotas (oculto) -->
 <template id="pet-template">
     <tr class="pet-item repeater-row border-b hover:bg-gray-50 block md:table-row mb-6 md:mb-0">
-        <td class="repeater-cell py-1 block md:table-cell before:content-['Nombre:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+        <td class="repeater-cell py-1 block md:table-cell before:content-['Nombre:'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <input type="text" 
                    name="pets[INDEX][name]" 
                    class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase pet-input-name bg-yellow-50 focus:bg-white" 
@@ -9,7 +9,7 @@
                    required 
                    aria-label="Nombre de la mascota">
         </td>
-        <td class="repeater-cell py-1 block md:table-cell before:content-['Tipo:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+        <td class="repeater-cell py-1 block md:table-cell before:content-['Tipo:'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <select name="pets[INDEX][type]" 
                     class="repeater-field shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pet-input-type bg-yellow-50 focus:bg-white" 
                     required
@@ -19,13 +19,15 @@
                 <option value="gato">Gato</option>
             </select>
         </td>
-        <td class="repeater-cell py-1 block md:table-cell before:content-['Raza:_*'] before:font-bold before:text-gray-700 before:block md:before:hidden">
+        <td class="repeater-cell py-1 block md:table-cell before:content-['Raza:'] before:font-bold before:text-gray-700 before:block md:before:hidden">
             <select name="pets[INDEX][breed_id]" 
-                    class="repeater-field shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pet-input-breed bg-yellow-50 focus:bg-white" 
+                    class="repeater-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-yellow-50 focus:bg-white"
                     required
                     aria-label="Raza de la mascota">
-                <option value="">Seleccionar raza...</option>
-                <!-- Las opciones de razas se cargarán dinámicamente desde window.breedsData -->
+                <option value="" disabled selected>Seleccione una raza</option>
+                @foreach($breeds as $breed)
+                    <option value="{{ $breed->id }}">{{ $breed->name }}</option>
+                @endforeach
             </select>
         </td>
         <td class="repeater-cell py-1 text-center block md:table-cell">

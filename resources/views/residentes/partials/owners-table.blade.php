@@ -3,10 +3,10 @@
     <table class="min-w-full bg-white">
         <thead class="hidden md:table-header-group">
             <tr class="bg-gray-100 text-gray-600 uppercase text-sm">
-                <th class="py-3 px-4 text-left w-[30%]">Nombre Completo</th>
-                <th class="py-3 px-4 text-left w-[20%]">Cédula</th>
-                <th class="py-3 px-4 text-left w-[20%]">Celular</th>
-                <th class="py-3 px-4 text-left w-[30%]">Email</th>
+                <th class="py-3 px-4 text-left w-[30%]">Nombre Completo<span class="text-red-600 ml-1">*</span></th>
+                <th class="py-3 px-4 text-left w-[20%]">Cédula<span class="text-red-600 ml-1">*</span></th>
+                <th class="py-3 px-4 text-left w-[20%]">Celular<span class="text-red-600 ml-1">*</span></th>
+                <th class="py-3 px-4 text-left w-[30%]">Email<span class="text-red-600 ml-1">*</span></th>
                 <th class="py-3 px-2 text-center w-[5%]">
                     <span class="sr-only">Acciones</span>
                 </th>

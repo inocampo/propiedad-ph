@@ -14,6 +14,7 @@ class Resident extends Model
         'name',
         'document_number',
         'phone_number',
+        'phone_for_intercom',
         'relationship_id',
     ];
 

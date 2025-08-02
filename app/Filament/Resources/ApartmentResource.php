@@ -189,7 +189,7 @@ class ApartmentResource extends Resource
                                         ->dehydrateStateUsing(fn ($state) => strtoupper($state))
                                         ->extraInputAttributes(['style' => 'text-transform: uppercase'])
                                         ->required()
-                                        ->columnSpan(3),
+                                        ->columnSpan(2),
                                     Forms\Components\Select::make('relationship_id')
                                         ->relationship('relationship', 'name')
                                         ->label('Parentesco')
@@ -208,7 +208,7 @@ class ApartmentResource extends Resource
                                                 ->required(),
                                         ])
                                         ->required()
-                                        ->columnSpan(3  ),
+                                        ->columnSpan(2),
                                     Forms\Components\TextInput::make('document_number')
                                         ->label('Cédula')
                                         ->required()
@@ -217,6 +217,10 @@ class ApartmentResource extends Resource
                                         ->label('Celular')
                                         ->tel()
                                         ->required()
+                                        ->columnSpan(2),
+                                    Forms\Components\Checkbox::make('phone_for_intercom')
+                                        ->label('Citófono')
+                                        ->helperText('Autoriza usar este celular en la citofonía')
                                         ->columnSpan(2),
                                 ])
                             ->columns(10)

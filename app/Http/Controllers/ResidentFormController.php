@@ -166,34 +166,68 @@ class ResidentFormController extends Controller
                 'owners' => 'nullable|array',
                 'owners.*.name' => 'required|string|max:255',
                 'owners.*.document' => 'required|string|max:20',
-                'owners.*.phone' => 'nullable|string|max:20',
-                'owners.*.email' => 'nullable|email|max:255',
+                'owners.*.phone' => 'required|string|max:20',
+                'owners.*.email' => 'required|email|max:255',
                 
                 // Residentes
                 'residents' => 'nullable|array',
                 'residents.*.name' => 'required|string|max:255',
                 'residents.*.document' => 'required|string|max:20',
-                'residents.*.phone' => 'nullable|string|max:20',
-                'residents.*.relationship_id' => 'nullable|exists:relationships,id',
+                'residents.*.phone' => 'required|string|max:20',
+                'residents.*.relationship_id' => 'required|exists:relationships,id',
+                'residents.*.phone_for_intercom' => 'nullable|boolean',
                 
                 // Menores de edad
                 'minors' => 'nullable|array',
                 'minors.*.name' => 'required|string|max:255',
-                'minors.*.age' => 'nullable|integer|min:0|max:17',
-                'minors.*.gender' => 'nullable|string|in:niño,niña',
+                'minors.*.age' => 'required|integer|min:0|max:17',
+                'minors.*.gender' => 'required|string|in:niño,niña',
                 
                 // Vehículos
                 'vehicles' => 'nullable|array',
                 'vehicles.*.type' => 'required|string|in:carro,moto',
                 'vehicles.*.license_plate' => 'required|string|max:10',
-                'vehicles.*.brand_id' => 'nullable|exists:brands,id',
-                'vehicles.*.color_id' => 'nullable|exists:colors,id',
+                'vehicles.*.brand_id' => 'required|exists:brands,id',
+                'vehicles.*.color_id' => 'required|exists:colors,id',
                 
                 // Mascotas
                 'pets' => 'nullable|array',
                 'pets.*.name' => 'required|string|max:255',
                 'pets.*.type' => 'required|string|in:perro,gato',
-                'pets.*.breed_id' => 'nullable|exists:breeds,id',
+                'pets.*.breed_id' => 'required|exists:breeds,id',
+            ], [
+                'required' => 'El campo :attribute es obligatorio.',
+                'email' => 'El campo :attribute debe ser un correo válido.',
+                'string' => 'El campo :attribute debe ser texto.',
+                'integer' => 'El campo :attribute debe ser un número.',
+                'min' => 'El campo :attribute debe tener al menos :min.',
+                'in' => 'El valor seleccionado para :attribute no es válido.',
+                'exists' => 'El valor seleccionado para :attribute no es válido.',
+                'required_if' => 'El campo :attribute es obligatorio.',
+            ], [
+                'resident_name' => 'nombre del residente principal',
+                'resident_document' => 'cédula del residente principal',
+                'resident_phone' => 'celular del residente principal',
+                'resident_email' => 'email del residente principal',
+                'bicycles_count' => 'cantidad de bicicletas',
+                'owners.*.name' => 'nombre del propietario',
+                'owners.*.document' => 'cédula del propietario',
+                'owners.*.phone' => 'celular del propietario',
+                'owners.*.email' => 'email del propietario',
+                'residents.*.name' => 'nombre del residente',
+                'residents.*.document' => 'cédula del residente',
+                'residents.*.phone' => 'celular del residente',
+                'residents.*.relationship_id' => 'parentesco del residente',
+                'minors.*.name' => 'nombre del menor',
+                'minors.*.age' => 'edad del menor',
+                'minors.*.gender' => 'género del menor',
+                'vehicles.*.type' => 'tipo de vehículo',
+                'vehicles.*.license_plate' => 'placa del vehículo',
+                'vehicles.*.brand_id' => 'marca del vehículo',
+                'vehicles.*.color_id' => 'color del vehículo',
+                'pets.*.name' => 'nombre de la mascota',
+                'pets.*.type' => 'tipo de mascota',
+                'pets.*.breed_id' => 'raza de la mascota',
             ]);
 
             Log::info('Validation successful');
@@ -290,8 +324,8 @@ class ResidentFormController extends Controller
                 $owner = $apartamento->owners()->create([
                     'name' => strtoupper($ownerData['name']),
                     'document_number' => $ownerData['document'],
-                    'phone_number' => $ownerData['phone'] ?? null,
-                    'email' => isset($ownerData['email']) ? strtolower($ownerData['email']) : null,
+                    'phone_number' => $ownerData['phone'],
+                    'email' => strtolower($ownerData['email']),
                 ]);
                 Log::info('Owner created with ID: ' . $owner->id);
             }
@@ -313,6 +347,7 @@ class ResidentFormController extends Controller
                     'document_number' => $residentData['document'],
                     'phone_number' => $residentData['phone'] ?? null,
                     'relationship_id' => $residentData['relationship_id'] ?? null,
+                    'phone_for_intercom' => $residentData['phone_for_intercom'] ?? false,
                 ]);
                 Log::info('Resident created with ID: ' . $resident->id);
             }

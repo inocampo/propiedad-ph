@@ -3,10 +3,11 @@
     <table class="min-w-full bg-white">
         <thead class="hidden md:table-header-group">
             <tr class="bg-gray-100 text-gray-600 uppercase text-sm">
-                <th class="py-3 px-4 text-left">Nombre Completo</th>
-                <th class="py-3 px-4 text-left">Cédula</th>
-                <th class="py-3 px-4 text-left">Celular</th>
-                <th class="py-3 px-4 text-left">Parentesco</th>
+                <th class="py-3 px-4 text-left">Nombre Completo<span class="text-red-600 ml-1">*</span></th>
+                <th class="py-3 px-4 text-left">Cédula<span class="text-red-600 ml-1">*</span></th>
+                <th class="py-3 px-4 text-left">Celular<span class="text-red-600 ml-1">*</span></th>
+                <th class="py-3 px-3 text-left">Parentesco<span class="text-red-600 ml-1">*</span></th>
+                <th class="py-3 px-4 text-left">Citófono</th>
                 <th class="py-3 px-2 text-center w-[5%]">
                     <span class="sr-only">Acciones</span>
                 </th>
@@ -17,7 +18,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="5" class="py-3 px-4">
+                <td colspan="6" class="py-3 px-4">
                     <button type="button" 
                             id="add-resident-btn" 
                             class="flex items-center justify-center w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">

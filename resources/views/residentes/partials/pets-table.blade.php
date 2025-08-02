@@ -3,9 +3,9 @@
     <table class="min-w-full bg-white">
         <thead class="hidden md:table-header-group">
             <tr class="bg-gray-100 text-gray-600 uppercase text-sm">
-                <th class="py-3 px-4 text-left w-[30%]">Nombre</th>
-                <th class="py-3 px-4 text-left w-[20%]">Tipo</th>
-                <th class="py-3 px-4 text-left w-[40%]">Raza</th>
+                <th class="py-3 px-4 text-left w-[30%]">Nombre<span class="text-red-600 ml-1">*</span></th>
+                <th class="py-3 px-4 text-left w-[20%]">Tipo<span class="text-red-600 ml-1">*</span></th>
+                <th class="py-3 px-4 text-left w-[40%]">Raza<span class="text-red-600 ml-1">*</span></th>
                 <th class="py-3 px-2 text-center w-[5%]">
                     <span class="sr-only">Acciones</span>
                 </th>

@@ -192,6 +192,13 @@ window.ResidentsModule = {
         this.fillField(row, 'input[name$="[document]"]', residentData.document_number);
         this.fillField(row, 'input[name$="[phone]"]', residentData.phone_number);
         this.fillField(row, 'select[name$="[relationship_id]"]', residentData.relationship_id);
+
+        // --- INICIO: Lógica para el checkbox de citófono ---
+        const intercomCheckbox = row.querySelector('input[type="checkbox"][name$="[phone_for_intercom]"]');
+        if (intercomCheckbox) {
+            intercomCheckbox.checked = !!residentData.phone_for_intercom;
+        }
+        // --- FIN: Lógica para el checkbox de citófono ---
     },
     
     fillField: function(row, selector, value) {
