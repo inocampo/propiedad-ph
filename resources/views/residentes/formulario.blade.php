@@ -167,12 +167,82 @@
                     @include('residentes.templates.vehicle-template')
                     @include('residentes.templates.pet-template')
                     
-                    <!-- Botón de Envío -->
-                    <div class="flex items-center justify-center mt-8">
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline">
-                            Guardar Información
+                    <!-- Toast de éxito para "Guardar y Continuar" -->
+                    @if(session('success') && session('show_success_toast'))
+                    <div id="success-toast" 
+                        class="fixed top-4 right-4 z-50 flex items-center w-full max-w-md p-4 text-gray-500 bg-white rounded-lg shadow-lg border-l-4 border-green-500"
+                        role="alert">
+                        <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3 text-sm font-medium text-gray-900">
+                            {{ session('success') }}
+                        </div>
+                        <button type="button" 
+                                class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8"
+                                onclick="hideToast()">
+                            <span class="sr-only">Cerrar</span>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
                         </button>
                     </div>
+                    @endif
+
+<!-- Botones de Envío Duales CON DEBUG -->
+<div class="flex flex-col md:flex-row items-center justify-center gap-4 mt-8">
+    <!-- Botón: Guardar y Continuar -->
+    <button type="submit" 
+            name="action" 
+            value="save_continue"
+            id="btn-save-continue"
+            class="w-full md:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-colors duration-200 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+        </svg>
+        Guardar y Continuar Editando
+    </button>
+    
+                        <!-- Botón: Guardar y Salir -->
+                        <button type="submit" 
+                                name="action" 
+                                value="save_exit"
+                                id="btn-save-exit"
+                                class="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-colors duration-200 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Guardar y Finalizar
+                        </button>
+                    </div>
+
+                    <!-- Mensaje de ayuda -->
+                    <div class="text-center mt-4">
+                        <p class="text-sm text-gray-600">
+                            <strong>Guardar y Continuar:</strong> Guarda los cambios y permite seguir editando.<br>
+                            <strong>Guardar y Finalizar:</strong> Guarda los cambios y regresa al inicio.
+                        </p>
+                    </div>
+
+                    <style>
+                    #success-toast {
+                        animation: slideInRight 0.3s ease-out;
+                    }
+
+                    @keyframes slideInRight {
+                        from {
+                            opacity: 0;
+                            transform: translateX(100%);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateX(0);
+                        }
+                    }
+                    </style>
+
                 </form>
             </div>
         </div>

@@ -15,8 +15,11 @@ use App\Models\Breed;
 use App\Mail\VerificationCode;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class ResidentFormController extends Controller
 {
@@ -89,7 +92,7 @@ class ResidentFormController extends Controller
             // Capturar cualquier error en el envío de email
             $emailEnviado = false;
             // Registrar el error para depuración
-            \Log::error('Error al enviar email: ' . $e->getMessage());
+            Log::error('Error al enviar email: ' . $e->getMessage());
         }
         
         return view('residentes.verificar-codigo', [
@@ -114,7 +117,6 @@ class ResidentFormController extends Controller
         if ($request->codigo === $codigoGuardado) {
             $apartamento = Apartment::where('number', $apartmentNumber)->firstOrFail();
             
-            // ✅ Usar el método privado para obtener todos los datos
             $data = $this->getFormData($apartamento);
             
             return view('residentes.formulario', $data);
@@ -130,146 +132,252 @@ class ResidentFormController extends Controller
     {
         $apartamento = Apartment::where('number', $number)->first();
         
-        // ✅ Usar el método privado para obtener todos los datos
         $data = $this->getFormData($apartamento);
         
         return view('residentes.formulario', $data);
     }
 
     /**
-     * Guarda los datos del formulario
+     * Guarda los datos del formulario - CON LOGS DE DEPURACIÓN
      */
     public function guardarDatos(Request $request)
     {
-        $request->validate([
-            'number' => 'required|string|max:5',
-            'resident_name' => 'required|string|max:255',
-            'resident_document' => 'required|string|max:20',
-            'resident_phone' => 'required|string|max:20',
-            'resident_email' => 'required|email|max:255',
-            'has_bicycles' => 'nullable|boolean',
-            'bicycles_count' => 'nullable|integer|min:1|required_if:has_bicycles,1',
-            'received_manual' => 'nullable|boolean',
-            'observations' => 'nullable|string',
-            
-            // Propietarios
-            'owners' => 'nullable|array',
-            'owners.*.name' => 'required|string|max:255',
-            'owners.*.document' => 'required|string|max:20',
-            'owners.*.phone' => 'nullable|string|max:20',
-            'owners.*.email' => 'nullable|email|max:255',
-            
-            // Residentes
-            'residents' => 'nullable|array',
-            'residents.*.name' => 'required|string|max:255',
-            'residents.*.document' => 'required|string|max:20',
-            'residents.*.phone' => 'nullable|string|max:20',
-            'residents.*.relationship_id' => 'nullable|exists:relationships,id',
-            
-            // Menores de edad
-            'minors' => 'nullable|array',
-            'minors.*.name' => 'required|string|max:255',
-            'minors.*.age' => 'nullable|integer|min:0|max:17',
-            'minors.*.gender' => 'nullable|string|in:niño,niña',
-            
-            // Vehículos - ✅ CORREGIDO: brand_id y color_id
-            'vehicles' => 'nullable|array',
-            'vehicles.*.type' => 'required|string|in:carro,moto',
-            'vehicles.*.license_plate' => 'required|string|max:10',
-            'vehicles.*.brand_id' => 'nullable|exists:brands,id',
-            'vehicles.*.color_id' => 'nullable|exists:colors,id',
-            
-            // Mascotas - ✅ CORREGIDO: breed_id
-            'pets' => 'nullable|array',
-            'pets.*.name' => 'required|string|max:255',
-            'pets.*.type' => 'required|string|in:perro,gato',
-            'pets.*.breed_id' => 'nullable|exists:breeds,id',
-        ]);
+        // LOGS DE DEPURACIÓN
+        Log::info('=== INICIO GUARDADO DE DATOS ===');
+        Log::info('Action received: ' . $request->input('action'));
+        Log::info('Apartment number: ' . $request->input('number'));
+        Log::info('Request method: ' . $request->method());
+        Log::info('All request data: ', $request->all());
 
-        // Buscar o crear el apartamento
-        $apartamento = Apartment::firstOrNew(['number' => $request->number]);
-        
-        // Actualizar datos del apartamento
-        $apartamento->resident_name = strtoupper($request->resident_name);
-        $apartamento->resident_document = $request->resident_document;
-        $apartamento->resident_phone = $request->resident_phone;
-        $apartamento->resident_email = strtolower($request->resident_email);
-        $apartamento->has_bicycles = $request->has_bicycles ?? false;
-        $apartamento->bicycles_count = $request->has_bicycles ? $request->bicycles_count : null;
-        $apartamento->received_manual = $request->received_manual ?? false;
-        $apartamento->observations = $request->observations;
-        
-        $apartamento->save();
-        
-        // Procesar propietarios
-        if ($request->has('owners')) {
-            $apartamento->owners()->delete();
+        try {
+            $validatedData = $request->validate([
+                'number' => 'required|string|max:5',
+                'resident_name' => 'required|string|max:255',
+                'resident_document' => 'required|string|max:20',
+                'resident_phone' => 'required|string|max:20',
+                'resident_email' => 'required|email|max:255',
+                'has_bicycles' => 'nullable|boolean',
+                'bicycles_count' => 'nullable|integer|min:1|required_if:has_bicycles,1',
+                'received_manual' => 'nullable|boolean',
+                'observations' => 'nullable|string',
+                'action' => 'required|in:save_continue,save_exit',
+                
+                // Propietarios
+                'owners' => 'nullable|array',
+                'owners.*.name' => 'required|string|max:255',
+                'owners.*.document' => 'required|string|max:20',
+                'owners.*.phone' => 'nullable|string|max:20',
+                'owners.*.email' => 'nullable|email|max:255',
+                
+                // Residentes
+                'residents' => 'nullable|array',
+                'residents.*.name' => 'required|string|max:255',
+                'residents.*.document' => 'required|string|max:20',
+                'residents.*.phone' => 'nullable|string|max:20',
+                'residents.*.relationship_id' => 'nullable|exists:relationships,id',
+                
+                // Menores de edad
+                'minors' => 'nullable|array',
+                'minors.*.name' => 'required|string|max:255',
+                'minors.*.age' => 'nullable|integer|min:0|max:17',
+                'minors.*.gender' => 'nullable|string|in:niño,niña',
+                
+                // Vehículos
+                'vehicles' => 'nullable|array',
+                'vehicles.*.type' => 'required|string|in:carro,moto',
+                'vehicles.*.license_plate' => 'required|string|max:10',
+                'vehicles.*.brand_id' => 'nullable|exists:brands,id',
+                'vehicles.*.color_id' => 'nullable|exists:colors,id',
+                
+                // Mascotas
+                'pets' => 'nullable|array',
+                'pets.*.name' => 'required|string|max:255',
+                'pets.*.type' => 'required|string|in:perro,gato',
+                'pets.*.breed_id' => 'nullable|exists:breeds,id',
+            ]);
+
+            Log::info('Validation successful');
+            Log::info('Validated action: ' . $validatedData['action']);
+
+            DB::beginTransaction();
+            Log::info('Database transaction started');
+
+            // Buscar o crear el apartamento
+            $apartamento = Apartment::firstOrNew(['number' => $validatedData['number']]);
+            Log::info('Apartment found/created for: ' . $validatedData['number']);
             
-            foreach ($request->owners as $ownerData) {
-                $apartamento->owners()->create([
+            // Actualizar datos del apartamento
+            $apartamento->resident_name = strtoupper($validatedData['resident_name']);
+            $apartamento->resident_document = $validatedData['resident_document'];
+            $apartamento->resident_phone = $validatedData['resident_phone'];
+            $apartamento->resident_email = strtolower($validatedData['resident_email']);
+            $apartamento->has_bicycles = $request->boolean('has_bicycles');
+            $apartamento->bicycles_count = $request->boolean('has_bicycles') ? $validatedData['bicycles_count'] : null;
+            $apartamento->received_manual = $request->boolean('received_manual');
+            $apartamento->observations = $validatedData['observations'];
+            
+            $apartamento->save();
+            Log::info('Apartment saved successfully with ID: ' . $apartamento->id);
+            
+            // Procesar todas las relaciones
+            Log::info('Processing owners...');
+            $this->processPropietarios($apartamento, $validatedData['owners'] ?? []);
+            
+            Log::info('Processing residents...');
+            $this->processResidentes($apartamento, $validatedData['residents'] ?? []);
+            
+            Log::info('Processing minors...');
+            $this->processMenores($apartamento, $validatedData['minors'] ?? []);
+            
+            Log::info('Processing vehicles...');
+            $this->processVehiculos($apartamento, $validatedData['vehicles'] ?? []);
+            
+            Log::info('Processing pets...');
+            $this->processMascotas($apartamento, $validatedData['pets'] ?? []);
+
+            DB::commit();
+            Log::info('Database transaction committed successfully');
+
+            // LÓGICA DUAL DE GUARDADO
+            $action = $validatedData['action'];
+            Log::info('Processing action: ' . $action);
+            
+            if ($action === 'save_continue') {
+                Log::info('Redirecting to continue editing');
+                // Guardar y continuar editando
+                return redirect()
+                    ->route('residentes.formulario', ['number' => $apartamento->number])
+                    ->with('success', '¡Información guardada exitosamente! Puedes continuar editando.')
+                    ->with('show_success_toast', true);
+            } else {
+                Log::info('Redirecting to confirmation page');
+                // Guardar y salir (comportamiento original)
+                return redirect()
+                    ->route('residentes.confirmacion')
+                    ->with('apartamento_number', $apartamento->number)
+                    ->with('success', 'Información guardada y actualizada exitosamente.');
+            }
+
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            Log::error('Validation error: ', $e->errors());
+            return redirect()->back()
+                ->withErrors($e->errors())
+                ->withInput()
+                ->with('error', 'Por favor corrige los errores en el formulario.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('General error in guardarDatos: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+            
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Ocurrió un error al guardar la información. Por favor intenta nuevamente.');
+        }
+    }
+
+    /**
+     * Método auxiliar para procesar propietarios
+     */
+    private function processPropietarios($apartamento, $ownersData)
+    {
+        Log::info('Processing ' . count($ownersData) . ' owners');
+        $apartamento->owners()->delete();
+        
+        foreach ($ownersData as $index => $ownerData) {
+            if (!empty($ownerData['name']) && !empty($ownerData['document'])) {
+                $owner = $apartamento->owners()->create([
                     'name' => strtoupper($ownerData['name']),
                     'document_number' => $ownerData['document'],
                     'phone_number' => $ownerData['phone'] ?? null,
                     'email' => isset($ownerData['email']) ? strtolower($ownerData['email']) : null,
                 ]);
+                Log::info('Owner created with ID: ' . $owner->id);
             }
         }
+    }
+
+    /**
+     * Método auxiliar para procesar residentes
+     */
+    private function processResidentes($apartamento, $residentsData)
+    {
+        Log::info('Processing ' . count($residentsData) . ' residents');
+        $apartamento->residents()->delete();
         
-        // Procesar residentes
-        if ($request->has('residents')) {
-            $apartamento->residents()->delete();
-            
-            foreach ($request->residents as $residentData) {
-                $apartamento->residents()->create([
+        foreach ($residentsData as $index => $residentData) {
+            if (!empty($residentData['name']) && !empty($residentData['document'])) {
+                $resident = $apartamento->residents()->create([
                     'name' => strtoupper($residentData['name']),
                     'document_number' => $residentData['document'],
                     'phone_number' => $residentData['phone'] ?? null,
                     'relationship_id' => $residentData['relationship_id'] ?? null,
                 ]);
+                Log::info('Resident created with ID: ' . $resident->id);
             }
         }
+    }
+
+    /**
+     * Método auxiliar para procesar menores
+     */
+    private function processMenores($apartamento, $minorsData)
+    {
+        Log::info('Processing ' . count($minorsData) . ' minors');
+        $apartamento->minors()->delete();
         
-        // Procesar menores de edad
-        if ($request->has('minors')) {
-            $apartamento->minors()->delete();
-            
-            foreach ($request->minors as $minorData) {
-                $apartamento->minors()->create([
+        foreach ($minorsData as $index => $minorData) {
+            if (!empty($minorData['name'])) {
+                $minor = $apartamento->minors()->create([
                     'name' => strtoupper($minorData['name']),
                     'age' => $minorData['age'] ?? null,
                     'gender' => $minorData['gender'] ?? null,
                 ]);
+                Log::info('Minor created with ID: ' . $minor->id);
             }
         }
+    }
+
+    /**
+     * Método auxiliar para procesar vehículos
+     */
+    private function processVehiculos($apartamento, $vehiclesData)
+    {
+        Log::info('Processing ' . count($vehiclesData) . ' vehicles');
+        $apartamento->vehicles()->delete();
         
-        // Procesar vehículos - ✅ CORREGIDO: brand_id y color_id
-        if ($request->has('vehicles')) {
-            $apartamento->vehicles()->delete();
-            
-            foreach ($request->vehicles as $vehicleData) {
-                $apartamento->vehicles()->create([
+        foreach ($vehiclesData as $index => $vehicleData) {
+            if (!empty($vehicleData['type']) && !empty($vehicleData['license_plate'])) {
+                $vehicle = $apartamento->vehicles()->create([
                     'type' => $vehicleData['type'],
                     'license_plate' => strtoupper($vehicleData['license_plate']),
                     'brand_id' => $vehicleData['brand_id'] ?? null,
                     'color_id' => $vehicleData['color_id'] ?? null,
                 ]);
+                Log::info('Vehicle created with ID: ' . $vehicle->id);
             }
         }
+    }
+
+    /**
+     * Método auxiliar para procesar mascotas
+     */
+    private function processMascotas($apartamento, $petsData)
+    {
+        Log::info('Processing ' . count($petsData) . ' pets');
+        $apartamento->pets()->delete();
         
-        // ✅ PROCESAR MASCOTAS - CORREGIDO: breed_id
-        if ($request->has('pets')) {
-            $apartamento->pets()->delete();
-            
-            foreach ($request->pets as $petData) {
-                $apartamento->pets()->create([
+        foreach ($petsData as $index => $petData) {
+            if (!empty($petData['name']) && !empty($petData['type'])) {
+                $pet = $apartamento->pets()->create([
                     'name' => strtoupper($petData['name']),
                     'type' => $petData['type'],
                     'breed_id' => $petData['breed_id'] ?? null,
                 ]);
+                Log::info('Pet created with ID: ' . $pet->id);
             }
         }
-        
-        return redirect()->route('residentes.confirmacion');
     }
 
     /**
@@ -277,6 +385,12 @@ class ResidentFormController extends Controller
      */
     public function confirmacion()
     {
+        // Verificar que la sesión tenga los datos necesarios
+        if (!session('success') && !session('apartamento_number')) {
+            return redirect()->route('residentes.index')
+                ->with('error', 'Acceso no autorizado.');
+        }
+        
         return view('residentes.confirmacion');
     }
 }

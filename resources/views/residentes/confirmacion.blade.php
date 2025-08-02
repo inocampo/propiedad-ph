@@ -22,10 +22,18 @@
                 <p class="text-gray-700">La administración del Conjunto Residencial Gualanday revisará su información.</p>
             </div>
             
-            <div class="flex items-center justify-center">
-                <a href="{{ route('residentes.index') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <div class="flex flex-col sm:flex-row gap-3 items-center justify-center">
+                <a href="{{ route('residentes.index') }}" 
+                class="w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-colors duration-200 text-center">
                     Volver al Inicio
                 </a>
+                
+                @if(session('apartamento_number'))
+                    <a href="{{ route('residentes.formulario', ['number' => session('apartamento_number')]) }}" 
+                    class="w-full sm:w-auto bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-colors duration-200 text-center">
+                        Editar Nuevamente
+                    </a>
+                @endif
             </div>
         </div>
     </div>
