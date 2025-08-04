@@ -15,6 +15,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Section;
 
 class ApartmentResource extends Resource
 {
@@ -135,7 +137,7 @@ class ApartmentResource extends Resource
                                     Forms\Components\Grid::make(3)
                                     ->schema([
                                         Forms\Components\Checkbox::make('received_manual')
-                                        ->label('¿Recibió el manual de convivencia?')
+                                        ->label('Recibí el manual de convivencia.')
                                         ->columnSpan(1),
                                         Forms\Components\Checkbox::make('has_bicycles')
                                             ->label('¿Tienen bicicletas?')
@@ -174,58 +176,109 @@ class ApartmentResource extends Resource
                                 ->live(),
                         ]),
                     Wizard\Step::make('Residentes')
-                        ->label(fn ($get) => new HtmlString(sprintf('Residentes <span class="ml-2 rounded-md bg-blue-500/10 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-500/20">%d</span>', count($get('residents') ?? []))))
-                        ->icon('heroicon-o-users')
-                        ->schema([
-                            Forms\Components\Repeater::make('residents')
-                                ->relationship()
-                                ->label('Residentes')
-                                ->default(fn ($record) => $record ? $record->residents : [])
-                                ->addAction(fn (Action $action) => $action->label('Agregar Residente Adulto')->icon('heroicon-o-users')->color('success'))
-                                ->helperText('Si no hay residentes, haz clic en el botón para añadir el primero.')
-                                ->schema([
-                                    Forms\Components\TextInput::make('name')
-                                        ->label('Nombre Completo')
-                                        ->dehydrateStateUsing(fn ($state) => strtoupper($state))
-                                        ->extraInputAttributes(['style' => 'text-transform: uppercase'])
-                                        ->required()
-                                        ->columnSpan(2),
-                                    Forms\Components\Select::make('relationship_id')
-                                        ->relationship('relationship', 'name')
-                                        ->label('Parentesco')
-                                        ->searchable()
-                                        ->preload()
-                                        ->createOptionForm([
-                                            Forms\Components\TextInput::make('name')
-                                                ->label('Parentesco')
-                                                ->dehydrateStateUsing(fn ($state) => strtoupper($state))
-                                                ->extraInputAttributes(['style' => 'text-transform: uppercase'])
-                                                ->afterStateUpdated(fn ($state, callable $set) => $set('name', strtoupper($state)))
-                                                ->unique(ignoreRecord: true)
-                                                ->validationMessages([
-                                                    'unique' => 'Este parentesco ya ha sido registrado.',
+                    ->label(fn ($get) => new HtmlString(sprintf('Residentes <span class="ml-2 rounded-md bg-blue-500/10 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-500/20">%d</span>', count($get('residents') ?? []))))
+                    ->icon('heroicon-o-users')
+                    ->schema([
+                        // ✅ Sección con botones de acción
+                        Forms\Components\Section::make('Opciones para agregar residentes')
+                            ->schema([
+                                Forms\Components\Actions::make([
+                                    Forms\Components\Actions\Action::make('select_owners')
+                                        ->label('Seleccionar Propietarios como Residentes')
+                                        ->icon('heroicon-o-user-plus')
+                                        ->color('info')
+                                        ->form(fn (callable $get) => [
+                                            Forms\Components\Section::make('Selecciona los propietarios a agregar como residentes')
+                                                ->schema([
+                                                    Forms\Components\CheckboxList::make('selected_owners')
+                                                        ->label('Propietarios disponibles')
+                                                        ->options(function () use ($get) {
+                                                            $owners = $get('owners') ?? [];
+                                                            return collect($owners)->mapWithKeys(function ($owner, $index) {
+                                                                return [$index => ($owner['name'] ?? 'Sin nombre') . ' - ' . ($owner['document_number'] ?? 'Sin cédula')];
+                                                            })->toArray();
+                                                        })
+                                                        ->columns(1)
+                                                        ->required()
+                                                        ->helperText('Selecciona los propietarios que también son residentes'),
                                                 ])
-                                                ->required(),
                                         ])
-                                        ->required()
-                                        ->columnSpan(2),
-                                    Forms\Components\TextInput::make('document_number')
-                                        ->label('Cédula')
-                                        ->required()
-                                        ->columnSpan(2),
-                                    Forms\Components\TextInput::make('phone_number')
-                                        ->label('Celular')
-                                        ->tel()
-                                        ->required()
-                                        ->columnSpan(2),
-                                    Forms\Components\Checkbox::make('phone_for_intercom')
-                                        ->label('Citófono')
-                                        ->helperText('Autoriza usar este celular en la citofonía')
-                                        ->columnSpan(2),
-                                ])
+                                        ->action(function (array $data, callable $get, callable $set) {
+                                            $owners = $get('owners') ?? [];
+                                            $selected = collect($data['selected_owners'] ?? []);
+                                            
+                                            $newResidents = $selected->map(fn ($index) => [
+                                                'name' => $owners[$index]['name'] ?? '',
+                                                'document_number' => $owners[$index]['document_number'] ?? '',
+                                                'phone_number' => $owners[$index]['phone_number'] ?? '',
+                                                'relationship_id' => null,
+                                                'phone_for_intercom' => true,
+                                            ])->toArray();
+                
+                                            $currentResidents = $get('residents') ?? [];
+                                            $set('residents', array_merge($currentResidents, $newResidents));
+                                        })
+                                        ->visible(fn (callable $get) => count($get('owners') ?? []) > 0),
+                                ]),
+                            ])
+                            ->collapsible()
+                            ->collapsed(false)
+                            ->visible(fn (callable $get) => count($get('owners') ?? []) > 0),
+                        
+                        // ✅ Repeater normal con su botón de agregar
+                        Forms\Components\Repeater::make('residents')
+                            ->relationship()
+                            ->label('Lista de Residentes')
+                            ->default(fn ($record) => $record ? $record->residents : [])
+                            ->addActionLabel('Agregar Residente Manual')
+                            ->helperText('Lista de todos los residentes del apartamento. Puedes agregar residentes manualmente o usar el botón de arriba para seleccionar propietarios.')
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->label('Nombre Completo')
+                                    ->dehydrateStateUsing(fn ($state) => strtoupper($state))
+                                    ->extraInputAttributes(['style' => 'text-transform: uppercase'])
+                                    ->required()
+                                    ->columnSpan(2),
+                                    
+                                Forms\Components\Select::make('relationship_id')
+                                    ->relationship('relationship', 'name')
+                                    ->label('Parentesco')
+                                    ->searchable()
+                                    ->preload()
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('name')
+                                            ->label('Parentesco')
+                                            ->dehydrateStateUsing(fn ($state) => strtoupper($state))
+                                            ->extraInputAttributes(['style' => 'text-transform: uppercase'])
+                                            ->afterStateUpdated(fn ($state, callable $set) => $set('name', strtoupper($state)))
+                                            ->unique(ignoreRecord: true)
+                                            ->validationMessages([
+                                                'unique' => 'Este parentesco ya ha sido registrado.',
+                                            ])
+                                            ->required(),
+                                    ])
+                                    ->required()
+                                    ->columnSpan(2),
+                                    
+                                Forms\Components\TextInput::make('document_number')
+                                    ->label('Cédula')
+                                    ->required()
+                                    ->columnSpan(2),
+                                    
+                                Forms\Components\TextInput::make('phone_number')
+                                    ->label('Celular')
+                                    ->tel()
+                                    ->required()
+                                    ->columnSpan(2),
+                                    
+                                Forms\Components\Checkbox::make('phone_for_intercom')
+                                    ->label('Citófono')
+                                    ->helperText('Autoriza usar este celular en la citofonía')
+                                    ->columnSpan(2),
+                            ])
                             ->columns(10)
                             ->live(),
-                        ]),
+                    ]),
                     Wizard\Step::make('Menores de Edad')
                         ->label(fn ($get) => new HtmlString(sprintf('Menores <span class="ml-2 rounded-md bg-blue-500/10 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-500/20">%d</span>', count($get('minors') ?? []))))
                         ->icon('heroicon-o-face-smile')
