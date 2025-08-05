@@ -64,16 +64,6 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Usuario Ramon Ocampo
-        User::updateOrCreate(
-            ['email' => 'inocampo1125@gmail.com'],
-            [
-                'name' => 'Ramon Ocampo',
-                'email' => 'inocampo1125@gmail.com',
-                'password' => Hash::make('Inocampo06107210#'),
-                'email_verified_at' => now(),
-            ]
-        );
 
         $this->command->info('✅ Usuarios creados correctamente');
     }
