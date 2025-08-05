@@ -20,6 +20,7 @@ class BrandSeeder extends Seeder
             
             // Marcas principalmente de carros
             'TOYOTA',
+            'BYD',
             'CHEVROLET',
             'RENAULT',
             'NISSAN',
