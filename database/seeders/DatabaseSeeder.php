@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -39,7 +37,7 @@ class DatabaseSeeder extends Seeder
         $this->command->line('');
         $this->command->info('📧 Credenciales de acceso:');
         $this->command->info('   Email: admin@gualanday.com');
-        $this->command->info('   Password: admin123');
+        $this->command->info('   Password: password123');
         $this->command->line('');
         $this->command->warn('⚠️  Recuerda cambiar las credenciales en producción');
     }
@@ -52,15 +50,7 @@ class DatabaseSeeder extends Seeder
         $this->command->info('👤 Creando usuarios administradores...');
 
         // Usuario administrador principal
-        User::updateOrCreate(
-            ['email' => 'admin@gualanday.com'],
-            [
-                'name' => 'Administrador Gualanday',
-                'email' => 'admin@gualanday.com',
-                'password' => Hash::make('admin123'),
-                'email_verified_at' => now(),
-            ]
-        );
+        $this->call(AdminUserSeeder::class);
 
 
         $this->command->info('✅ Usuarios creados correctamente');
