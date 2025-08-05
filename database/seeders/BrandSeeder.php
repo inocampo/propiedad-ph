@@ -13,7 +13,12 @@ class BrandSeeder extends Seeder
     public function run(): void
     {
         $brands = [
-            // Marcas de carros populares en Colombia
+            // Marcas compartidas (carros y motos)
+            'HONDA',
+            'SUZUKI',
+            'BMW',
+            
+            // Marcas principalmente de carros
             'TOYOTA',
             'CHEVROLET',
             'RENAULT',
@@ -23,8 +28,6 @@ class BrandSeeder extends Seeder
             'MAZDA',
             'FORD',
             'VOLKSWAGEN',
-            'HONDA',
-            'SUZUKI',
             'MITSUBISHI',
             'PEUGEOT',
             'CITROEN',
@@ -35,10 +38,8 @@ class BrandSeeder extends Seeder
             'GREAT WALL',
             'CHERY',
             
-            // Marcas de motos populares en Colombia
+            // Marcas principalmente de motos
             'YAMAHA',
-            'HONDA',
-            'SUZUKI',
             'KAWASAKI',
             'BAJAJ',
             'TVS',
@@ -46,7 +47,6 @@ class BrandSeeder extends Seeder
             'AUTECO',
             'HERO',
             'DUCATI',
-            'BMW',
             'KTM',
             'HUSQVARNA',
             'BENELLI',
