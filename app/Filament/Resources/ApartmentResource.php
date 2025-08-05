@@ -230,7 +230,12 @@ class ApartmentResource extends Resource
                             ->relationship()
                             ->label('Lista de Residentes')
                             ->default(fn ($record) => $record ? $record->residents : [])
-                            ->addActionLabel('Agregar Residente Manual')
+                            ->addAction(
+                                fn (Action $action) => $action
+                                    ->label('Agregar Residente')
+                                    ->icon('heroicon-o-user-plus')
+                                    ->color('success')
+                            )
                             ->helperText('Lista de todos los residentes del apartamento. Puedes agregar residentes manualmente o usar el botón de arriba para seleccionar propietarios.')
                             ->schema([
                                 Forms\Components\TextInput::make('name')
