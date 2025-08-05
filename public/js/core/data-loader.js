@@ -42,6 +42,28 @@ window.DataLoader = {
         } catch (error) {
             window.FormularioUtils.error('Error al cargar datos existentes', error);
         }
+
+        try {
+            // Cargar datos en cada módulo
+            this.loadOwnersData(apartamento.owners || []);
+            this.loadResidentsData(apartamento.residents || []);
+            this.loadMinorsData(apartamento.minors || []);
+            this.loadVehiclesData(apartamento.vehicles || []);
+            this.loadPetsData(apartamento.pets || []);
+            
+            // Cargar estado del checkbox received_manual
+            this.loadReceivedManualState(apartamento);
+            
+            // Actualizar todos los contadores
+            window.FormularioCounters.updateAll();
+            
+            window.FormularioUtils.log('Carga de datos completada');
+            window.FormularioUtils.dispatchEvent(window.FormularioCore.events.DATA_LOADED, {
+                apartamento: apartamento
+            });
+        } catch (error) {
+            window.FormularioUtils.error('Error al cargar datos existentes', error);
+        }
     },
     
     loadOwnersData: function(ownersData) {
