@@ -33,7 +33,6 @@ class BreedSeeder extends Seeder
             'PINSCHER',
             'SCHNAUZER',
             'PITBULL',
-            'CRIOLLO',
             
             // Razas de gatos más comunes en Colombia
             'SIAMÉS',
@@ -55,9 +54,9 @@ class BreedSeeder extends Seeder
             'ORIENTAL',
             'NORUEGO DEL BOSQUE',
             'COMÚN EUROPEO',
-            'CRIOLLO',
             
-            // Opción genérica
+            // Opciones genéricas (sin duplicar)
+            'CRIOLLO',
             'OTRO',
         ];
 
