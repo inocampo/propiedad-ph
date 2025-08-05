@@ -7,12 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
-    <div class="min-h-screen flex flex-col items-center justify-center">
+    <div class="flex flex-col items-center justify-center p-6">
         <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-            <div class="text-center mb-8">
+            <div class="text-center mb-8">           
                 <svg class="mx-auto h-16 w-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
+
                 <h1 class="text-3xl font-bold text-gray-800 mt-4">¡Información Guardada!</h1>
                 <p class="text-gray-600 mt-2">Sus datos han sido registrados correctamente.</p>
             </div>

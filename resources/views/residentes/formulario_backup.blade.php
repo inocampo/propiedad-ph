@@ -11,8 +11,8 @@
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
                 <div class="text-center mb-8">
-                    <h1 class="text-3xl font-bold text-gray-800">Formulario de Registro</h1>
-                    <p class="text-gray-600 mt-2">Apartamento: {{ $apartamento ? $apartamento->number : request()->route('number') }}</p>
+                    <h1 class="text-3xl font-bold text-gray-800">Registro de Residentes</h1>
+                    <h2 class="text-gray-600 mt-2">Apartamento: {{ $apartamento ? $apartamento->number : request()->route('number') }}</h2>
                 </div>
 
                 @if ($errors->any())
