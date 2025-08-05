@@ -2,9 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,8 +21,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             InvoiceTypeSeeder::class,
             PaymentMethodSeeder::class,
-            // WalletSeeder::class, ← COMENTADO para evitar duplicación
-            // UserSeeder::class, // Opcional: usuarios adicionales
+            // Nuevos seeders para el sistema de apartamentos
+            BrandSeeder::class,
+            BreedSeeder::class,
+            RelationshipSeeder::class,
+            ColorSeeder::class,
         ]);
 
         $this->command->line('');
@@ -33,6 +34,8 @@ class DatabaseSeeder extends Seeder
         $this->command->info('📧 Credenciales de acceso:');
         $this->command->info('   Email: admin@gualanday.com');
         $this->command->info('   Password: admin123');
+        $this->command->info('   Email: inocampo1125@gmail.com');
+        $this->command->info('   Password: Inocampo06107210#');
         $this->command->line('');
         $this->command->warn('⚠️  Recuerda cambiar las credenciales en producción');
     }
@@ -55,13 +58,13 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Mantener el usuario de prueba original si lo deseas
+        // Usuario Ramon Ocampo
         User::updateOrCreate(
-            ['email' => 'test@example.com'],
+            ['email' => 'inocampo1125@gmail.com'],
             [
-                'name' => 'Usuario de Prueba',
-                'email' => 'test@example.com',
-                'password' => Hash::make('password'),
+                'name' => 'Ramon Ocampo',
+                'email' => 'inocampo1125@gmail.com',
+                'password' => Hash::make('Inocampo06107210#'),
                 'email_verified_at' => now(),
             ]
         );
