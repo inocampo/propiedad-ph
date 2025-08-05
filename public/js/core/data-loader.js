@@ -32,9 +32,6 @@ window.DataLoader = {
             this.loadVehiclesData(apartamento.vehicles || []);
             this.loadPetsData(apartamento.pets || []);
             
-            // Cargar estado del checkbox received_manual
-            this.loadReceivedManualState(apartamento);
-            
             // Actualizar todos los contadores
             window.FormularioCounters.updateAll();
             

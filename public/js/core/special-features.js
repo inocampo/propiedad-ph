@@ -6,6 +6,7 @@
 window.SpecialFeatures = {
     init: function() {
         window.FormularioUtils.log('Inicializando funcionalidades especiales');
+        this.initReceivedManualToggle();
         this.initBicycleToggle();
         this.initTextTransforms();
         this.initSaveButtons();
@@ -38,7 +39,22 @@ window.SpecialFeatures = {
             }
         }
     },
-    
+
+    initReceivedManualToggle: function() {
+        const receivedManual = window.FormularioUtils.querySelector('#received_manual');
+        if (receivedManual) {
+            // Cargar estado inicial desde datos del apartamento
+            if (window.apartamentoData && window.apartamentoData.received_manual) {
+                receivedManual.checked = true;
+                window.FormularioUtils.log('✅ Estado inicial de received_manual cargado: true');
+            }
+            
+            window.FormularioUtils.log('Checkbox manual de convivencia inicializado');
+        } else {
+            window.FormularioUtils.error('Checkbox received_manual no encontrado');
+        }
+    },
+
     initTextTransforms: function() {
         // Auto uppercase para nombres
         document.addEventListener('input', function(e) {
