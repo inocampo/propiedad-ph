@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,6 +24,10 @@ class DatabaseSeeder extends Seeder
             InvoiceTypeSeeder::class,
             PaymentMethodSeeder::class,
             // Nuevos seeders para el sistema de apartamentos
+        ]);
+
+        // Ejecutar seeders del sistema de residentes
+        $this->call([
             BrandSeeder::class,
             BreedSeeder::class,
             RelationshipSeeder::class,
