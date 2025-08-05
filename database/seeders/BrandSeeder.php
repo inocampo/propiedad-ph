@@ -17,6 +17,7 @@ class BrandSeeder extends Seeder
             'HONDA',
             'SUZUKI',
             'BMW',
+            'OTRO',
             
             // Marcas principalmente de carros
             'TOYOTA',
