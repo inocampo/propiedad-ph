@@ -17,7 +17,7 @@ class InvoiceTypeSeeder extends Seeder
                 'name' => 'ADMINISTRACIÓN',
                 'description' => 'Cuota mensual de administración del conjunto residencial',
                 'is_recurring' => true,
-                'amount' => 150000, // Ajustar según tu conjunto
+                'amount' => 211700, // Ajustar según tu conjunto
                 'is_active' => true,
             ],
             [
