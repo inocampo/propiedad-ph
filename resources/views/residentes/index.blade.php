@@ -7,11 +7,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
-    <div class="min-h-screen flex flex-col items-center justify-center">
+    <div class="flex flex-col items-center justify-center p-6">
         <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
             <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-800">Conjunto Residencial Gualanday</h1>
-                <p class="text-gray-600 mt-2">Formulario de registro de información</p>
+                <div class="mb-6">
+                    <img src="{{ asset('images/logo.png') }}" 
+                         alt="Logo Conjunto Residencial Gualanday" 
+                         class="mx-auto h-16 w-auto object-contain">
+                </div>  
+                <p class="text-gray-600 mt-2">Formulario de registro de residentes</p>
             </div>
 
             <div class="mb-6">

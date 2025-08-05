@@ -10,6 +10,11 @@
     <div class="min-h-screen flex flex-col items-center justify-center">
         <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
             <div class="text-center mb-8">
+                <div class="mb-6">
+                    <img src="{{ asset('images/logo.png') }}" 
+                         alt="Logo Conjunto Residencial Gualanday" 
+                         class="mx-auto h-16 w-auto object-contain">
+                </div>      
                 <h1 class="text-3xl font-bold text-gray-800">Verificación de Código</h1>
                 <p class="text-gray-600 mt-2">Apartamento: {{ $apartamento->number }}</p>
             </div>
