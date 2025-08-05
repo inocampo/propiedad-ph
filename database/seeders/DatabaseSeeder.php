@@ -40,8 +40,6 @@ class DatabaseSeeder extends Seeder
         $this->command->info('📧 Credenciales de acceso:');
         $this->command->info('   Email: admin@gualanday.com');
         $this->command->info('   Password: admin123');
-        $this->command->info('   Email: inocampo1125@gmail.com');
-        $this->command->info('   Password: Inocampo06107210#');
         $this->command->line('');
         $this->command->warn('⚠️  Recuerda cambiar las credenciales en producción');
     }
