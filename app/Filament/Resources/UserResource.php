@@ -46,11 +46,6 @@ class UserResource extends Resource
                     ->dehydrated(fn ($state) => filled($state))
                     ->required(fn (string $context): bool => $context === 'create')
                     ->maxLength(255),
-                Forms\Components\Select::make('roles')
-                    ->label('Roles')
-                    ->multiple()
-                    ->relationship('roles', 'name')
-                    ->preload()
             ]);
     }
 
@@ -62,10 +57,6 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('name')->label('Nombre')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('email')->label('Correo Electrónico')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('roles.name')
-                    ->label('Roles')
-                    ->badge()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')->label('Creado el')->dateTime('d-M-Y')->sortable(),
             ])
             ->filters([
