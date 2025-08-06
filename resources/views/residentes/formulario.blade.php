@@ -273,6 +273,9 @@
     <script src="{{ asset('js/core/special-features.js') }}"></script>
     <script src="{{ asset('js/core/data-loader.js') }}"></script>
     
+    <!-- NUEVO: Core: Manejador de salida sin guardar -->
+    <script src="{{ asset('js/core/exit-handler.js') }}"></script>
+
     <!-- Aplicación principal -->
     <script src="{{ asset('js/app.js') }}"></script>
 </body>

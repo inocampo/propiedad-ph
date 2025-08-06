@@ -12,7 +12,8 @@ window.FormularioApp = {
         'VehiclesModule',
         'PetsModule',
         'SpecialFeatures',
-        'DataLoader'
+        'DataLoader',
+        'ExitHandler'
     ],
     
     init: function() {
@@ -248,6 +249,9 @@ window.SaveHandler = {
             this.saveFormState();
         }
         
+        if (window.ExitHandler && typeof window.ExitHandler.markAsSaved === 'function') {
+            window.ExitHandler.markAsSaved();
+        }
         window.FormularioUtils.log(`Enviando formulario con acción: ${action}`);
         // El formulario se enviará normalmente después de esto
     },
@@ -437,9 +441,6 @@ window.restartFormulario = function() {
         window.FormularioApp.restart();
     }
 };
-
-// Agregar SaveHandler al inicializador principal
-window.FormularioApp.modules.push('SaveHandler');
 
 // Inicialización automática cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {

@@ -36,6 +36,12 @@
                     <p class="font-medium text-blue-600">{{ substr($apartamento->resident_email, 0, 3) }}*****{{ substr($apartamento->resident_email, strpos($apartamento->resident_email, '@')) }}</p>
                 @endif
                 
+                @if (isset($codigo))
+                    <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4 mt-4">
+                        <p class="font-bold">Código para pruebas: {{ $codigo }}</p>
+                        <p class="text-sm">Nota: En producción, este código solo se enviará por email.</p>
+                    </div>
+                @endif
 
                 @if ($errors->any())
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
