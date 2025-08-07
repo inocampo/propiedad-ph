@@ -1,0 +1,790 @@
+/**
+ * Lightweight Search Select Styles - OPTIMIZADO PARA MÓVILES
+ * public/css/lightweight-search.css
+ * 
+ * Estilos que funcionan perfectamente tanto en desktop como móvil
+ */
+
+/* ===== WRAPPER CONTENEDOR BASE ===== */
+.search-select-wrapper {
+    position: relative;
+    width: 100%;
+    display: inline-block;
+    z-index: 1; /* Base z-index */
+}
+
+/* Cuando está activo, aumentar el z-index */
+.search-select-wrapper.search-active {
+    z-index: 1000;
+}
+
+/* ===== ESTILOS MÓVILES ===== */
+@media (max-width: 768px) {
+    
+    /* Wrapper para móviles */
+    .search-select-wrapper.mobile-search {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    
+    /* Select en móviles - ajustado para el botón */
+    .search-select-wrapper.mobile-search select {
+        width: 100%;
+        padding-right: 4.5rem !important;
+        font-size: 16px !important; /* Prevenir zoom en iOS */
+        -webkit-appearance: none;
+        appearance: none;
+    }
+    
+    /* Botón de búsqueda móvil */
+    .search-trigger-btn {
+        position: absolute !important;
+        top: 0 !important;
+        right: 0 !important;
+        height: 100% !important;
+        padding: 0 0.75rem !important;
+        background: #3b82f6 !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 0 0.375rem 0.375rem 0 !important;
+        font-size: 0.75rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 2 !important;
+        touch-action: manipulation !important;
+        transition: background-color 0.2s ease !important;
+        cursor: pointer !important;
+    }
+    
+    .search-trigger-btn:hover,
+    .search-trigger-btn:focus {
+        background: #2563eb !important;
+    }
+    
+    .search-trigger-btn:active {
+        background: #1d4ed8 !important;
+        transform: scale(0.98);
+    }
+    
+    /* Modal de búsqueda móvil */
+    .mobile-search-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        touch-action: none;
+    }
+    
+    .mobile-search-modal.modal-visible {
+        opacity: 1;
+    }
+    
+    .mobile-search-modal .modal-content {
+        background: white;
+        margin: 20px;
+        margin-top: max(60px, env(safe-area-inset-top, 20px));
+        border-radius: 0.75rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        max-height: calc(100vh - 120px);
+        transform: translateY(-20px);
+        transition: transform 0.3s ease;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    
+    .mobile-search-modal.modal-visible .modal-content {
+        transform: translateY(0);
+    }
+    
+    /* Header del modal */
+    .modal-header {
+        padding: 1.25rem 1rem 1rem 1rem;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    .modal-header h3 {
+        margin: 0;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #374151;
+        flex: 1;
+    }
+    
+    .close-modal-btn {
+        padding: 0.5rem;
+        background: none;
+        border: none;
+        color: #6b7280;
+        font-size: 1.75rem;
+        cursor: pointer;
+        touch-action: manipulation;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s;
+    }
+    
+    .close-modal-btn:hover,
+    .close-modal-btn:active {
+        background-color: #f3f4f6;
+        color: #374151;
+    }
+    
+    /* Container del input de búsqueda */
+    .modal-header + div {
+        padding: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+        background: white;
+        position: sticky;
+        top: 73px; /* Altura del header */
+        z-index: 9;
+    }
+    
+    /* Input de búsqueda en el modal */
+    .mobile-search-input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid #d1d5db;
+        border-radius: 0.75rem;
+        font-size: 16px !important; /* Prevenir zoom en iOS */
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        background: #f9fafb;
+    }
+    
+    .mobile-search-input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        background: white;
+    }
+    
+    /* Lista de resultados */
+    .results-list {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        background: white;
+    }
+    
+    /* Items de resultado */
+    .result-item {
+        padding: 1.25rem 1rem;
+        border-bottom: 1px solid #f3f4f6;
+        cursor: pointer;
+        touch-action: manipulation;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: background-color 0.2s;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #374151;
+        position: relative;
+    }
+    
+    .result-item:last-child {
+        border-bottom: none;
+    }
+    
+    .result-item:active {
+        background-color: #f3f4f6;
+    }
+    
+    /* Item seleccionado */
+    .result-item[data-selected="true"] {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        color: #1d4ed8;
+        font-weight: 500;
+    }
+    
+    .result-item[data-selected="true"]::after {
+        content: '✓';
+        color: #3b82f6;
+        font-weight: bold;
+        font-size: 1.125rem;
+    }
+    
+    /* Scrollbar para móviles */
+    .results-list::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .results-list::-webkit-scrollbar-track {
+        background: #f1f5f9;
+    }
+    
+    .results-list::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 2px;
+    }
+    
+    /* Mensaje de sin resultados */
+    .no-results-message {
+        padding: 3rem 2rem;
+        text-align: center;
+        color: #6b7280;
+        font-style: italic;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .no-results-message::before {
+        content: '🔍';
+        font-size: 3rem;
+        opacity: 0.5;
+    }
+    
+    /* Toast de feedback */
+    .mobile-feedback-toast {
+        position: fixed;
+        top: max(20px, env(safe-area-inset-top, 20px));
+        left: 50%;
+        transform: translateX(-50%);
+        background: #10b981;
+        color: white;
+        padding: 0.875rem 1.5rem;
+        border-radius: 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        z-index: 1001;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        max-width: calc(100vw - 40px);
+        text-align: center;
+    }
+    
+    /* Estados del modal */
+    .mobile-search-modal[data-closing="true"] {
+        opacity: 0;
+    }
+    
+    .mobile-search-modal[data-closing="true"] .modal-content {
+        transform: translateY(-20px);
+    }
+    
+    /* Animaciones para móvil */
+    @keyframes modalSlideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .mobile-search-modal.modal-visible .modal-content {
+        animation: modalSlideUp 0.3s ease-out;
+    }
+    
+    /* Soporte para notch/safe area */
+    @supports (padding: max(0px)) {
+        .mobile-search-modal .modal-content {
+            margin-top: max(60px, env(safe-area-inset-top, 60px));
+        }
+        
+        .mobile-feedback-toast {
+            top: max(20px, env(safe-area-inset-top, 20px));
+        }
+    }
+}
+
+/* ===== ESTILOS DESKTOP ===== */
+@media (min-width: 769px) {
+    
+    /* Input de búsqueda para desktop */
+    .search-select-wrapper.desktop-search .search-input {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        font-size: inherit;
+        line-height: 1.5;
+        color: #374151;
+        background-color: #fefce8;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        transition: all 0.15s ease-in-out;
+        outline: none;
+    }
+    
+    .search-select-wrapper.desktop-search .search-input:focus {
+        background-color: #ffffff;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    /* Estado activo de búsqueda desktop */
+    .search-select-wrapper.desktop-search.search-active {
+        z-index: 1000; /* Asegurar que el wrapper esté encima */
+    }
+    
+    .search-select-wrapper.desktop-search.search-active .search-input {
+        border-color: #10b981;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    
+    /* Indicador de búsqueda desktop mejorado */
+    .search-indicator {
+        position: absolute !important;
+        right: 0.5rem !important; /* Más cerca del borde */
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        pointer-events: none !important;
+        font-size: 0.875rem !important; /* Tamaño más pequeño */
+        color: #3b82f6 !important;
+        z-index: 2 !important; /* Encima del select */
+        transition: all 0.2s ease !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+        animation: searchPulse 2s ease-in-out infinite;
+        width: 1rem;
+        height: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    @keyframes searchPulse {
+        0%, 100% {
+            opacity: 0.7;
+            transform: translateY(-50%) scale(1);
+        }
+        50% {
+            opacity: 1;
+            transform: translateY(-50%) scale(1.05);
+        }
+    }
+    
+    .search-select-wrapper.desktop-search:hover .search-indicator {
+        opacity: 1 !important;
+        transform: translateY(-50%) scale(1.1) !important; /* Efecto de hover */
+        color: #1d4ed8 !important; /* Azul más oscuro en hover */
+        animation: none; /* Detener animación en hover */
+    }
+    
+    .search-select-wrapper.desktop-search.search-active .search-indicator {
+        opacity: 0;
+        animation: none;
+    }
+    
+    /* Mejorar el cursor en el área del select */
+    .search-select-wrapper.desktop-search select {
+        cursor: help; /* Cursor que indica que hay ayuda disponible */
+        position: relative;
+    }
+    
+    /* Cambiar cursor en el área del indicador */
+    .search-select-wrapper.desktop-search select:hover {
+        cursor: pointer;
+    }
+    
+    /* Estilo del tooltip personalizado */
+    .desktop-search-tooltip {
+        position: absolute;
+        bottom: calc(100% + 0.5rem);
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1f2937;
+        color: white;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        z-index: 1010;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        opacity: 0;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        pointer-events: none;
+    }
+
+/* ===== CORRECCIONES ESPECÍFICAS PARA FORMULARIO ===== */
+
+/* Asegurar alineación consistente en celdas de tabla */
+.repeater-cell {
+    vertical-align: top; /* Alineación consistente */
+}
+
+.repeater-cell input,
+.repeater-cell select,
+.repeater-cell .search-select-wrapper,
+.repeater-cell .search-select-wrapper select {
+    width: 100%;
+    height: auto;
+    min-height: 2.25rem;
+    box-sizing: border-box;
+    vertical-align: baseline;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Corrección específica para selects mejorados */
+.repeater-cell .search-select-wrapper select {
+    padding-right: 2.5rem !important;
+    background-position: right 0.5rem center !important;
+}
+
+/* Asegurar que todos los controles tengan la misma altura base */
+@media (min-width: 769px) {
+    .repeater-row input,
+    .repeater-row select,
+    .repeater-row .search-select-wrapper select {
+        height: 2.5rem; /* Altura consistente en desktop */
+        padding-top: 0.375rem;
+        padding-bottom: 0.375rem;
+    }
+    
+    .repeater-row .search-select-wrapper select {
+        padding-right: 2.5rem !important;
+    }
+}
+
+/* Reset de margin y padding para evitar desalineación */
+.search-select-wrapper,
+.search-select-wrapper select {
+    margin: 0 !important;
+}
+
+/* Corrección para el wrapper base */
+.search-select-wrapper {
+    position: relative;
+    width: 100%;
+    display: block; /* Cambiar de inline-block a block para mejor alineación */
+    z-index: 1;
+}
+    
+    /* Dropdown para desktop */
+    .search-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 999; /* Aumentado significativamente */
+        margin-top: 0.25rem;
+    }
+    
+    /* Items del dropdown desktop */
+    .dropdown-item {
+        padding: 0.5rem 0.75rem;
+        cursor: pointer;
+        border-bottom: 1px solid #f3f4f6;
+        transition: background-color 0.15s ease;
+        font-size: 0.875rem;
+    }
+    
+    .dropdown-item:last-child {
+        border-bottom: none;
+    }
+    
+    .dropdown-item:hover:not(.no-results) {
+        background-color: #f3f4f6;
+    }
+    
+    .dropdown-item.selected {
+        background-color: #eff6ff;
+        color: #1d4ed8;
+        font-weight: 500;
+    }
+    
+    .dropdown-item.no-results {
+        color: #6b7280;
+        font-style: italic;
+        cursor: default;
+    }
+    
+    /* Scrollbar del dropdown desktop */
+    .search-dropdown::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .search-dropdown::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 3px;
+    }
+    
+    .search-dropdown::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 3px;
+    }
+    
+    .search-dropdown::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+}
+
+/* ===== ESTILOS COMUNES ===== */
+
+/* Mejoras para el select original */
+.search-select-wrapper select {
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    position: relative;
+    z-index: 1;
+}
+
+.search-select-wrapper select:hover {
+    border-color: #9ca3af;
+}
+
+/* Estados de error */
+.field-error .search-select-wrapper .search-input,
+.field-error .search-select-wrapper .mobile-search-input {
+    border-color: #dc2626;
+    background-color: #fef2f2;
+}
+
+.field-error .search-select-wrapper .search-input:focus,
+.field-error .search-select-wrapper .mobile-search-input:focus {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+/* Integración con tablas del repeater */
+.repeater-row .search-select-wrapper {
+    width: 100%;
+    display: inline-block; /* Asegurar comportamiento consistente */
+}
+
+.repeater-row .search-select-wrapper select,
+.repeater-row .search-select-wrapper .search-input {
+    font-size: 0.875rem;
+    min-height: 2.25rem;
+    height: 2.25rem; /* Altura fija para alineación */
+    box-sizing: border-box;
+    vertical-align: top;
+}
+
+/* Asegurar que el indicador se alinee correctamente en tablas */
+.repeater-row .search-select-wrapper .search-indicator {
+    right: 0.5rem !important;
+    font-size: 0.75rem !important; /* Más pequeño en tablas */
+}
+
+/* Asegurar alineación vertical en celdas de tabla */
+.repeater-cell .search-select-wrapper {
+    display: block;
+    width: 100%;
+}
+
+.repeater-cell .search-select-wrapper select {
+    width: 100%;
+    margin: 0;
+    vertical-align: baseline;
+}
+
+/* Asegurar que las tablas no interfieran con el dropdown */
+.repeater-row {
+    position: relative;
+    z-index: 1;
+}
+
+/* Cuando una fila tiene búsqueda activa, debe estar encima */
+.repeater-row:has(.search-active) {
+    z-index: 1001;
+    position: relative;
+}
+
+/* Alternativa para navegadores que no soporten :has() */
+.repeater-row .search-select-wrapper.search-active {
+    z-index: 1001;
+}
+
+/* Para las celdas de las tablas */
+.repeater-cell {
+    position: relative;
+    z-index: 1;
+}
+
+/* Asegurar que el dropdown esté por encima de las celdas siguientes */
+.repeater-cell:has(.search-active) {
+    z-index: 1002;
+    position: relative;
+}
+
+/* Alternativa para navegadores que no soporten :has() */
+.repeater-cell .search-select-wrapper.search-active {
+    z-index: 1002;
+}
+
+/* Accesibilidad */
+.search-select-wrapper select:focus,
+.search-select-wrapper .search-input:focus,
+.search-select-wrapper .mobile-search-input:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Focus visible para navegación con teclado */
+.search-trigger-btn:focus-visible,
+.close-modal-btn:focus-visible,
+.result-item:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Optimización de rendimiento */
+.search-select-wrapper {
+    contain: layout style;
+}
+
+.mobile-search-modal,
+.search-dropdown {
+    contain: layout style;
+    will-change: transform, opacity;
+}
+
+/* Modo oscuro (opcional) */
+@media (prefers-color-scheme: dark) {
+    @media (max-width: 768px) {
+        .mobile-search-modal .modal-content {
+            background: #1f2937;
+            color: #f9fafb;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+            border-color: #4b5563;
+        }
+        
+        .modal-header h3 {
+            color: #f9fafb;
+        }
+        
+        .mobile-search-input {
+            background: #374151;
+            border-color: #4b5563;
+            color: #f9fafb;
+        }
+        
+        .mobile-search-input:focus {
+            background: #1f2937;
+            border-color: #3b82f6;
+        }
+        
+        .result-item {
+            color: #f9fafb;
+            border-color: #4b5563;
+        }
+        
+        .result-item:active {
+            background-color: #4b5563;
+        }
+        
+        .result-item[data-selected="true"] {
+            background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+            color: #dbeafe;
+        }
+    }
+    
+    @media (min-width: 769px) {
+        .search-dropdown {
+            background: #1f2937;
+            border-color: #374151;
+            color: #f9fafb;
+        }
+        
+        .dropdown-item:hover:not(.no-results) {
+            background-color: #374151;
+        }
+        
+        .dropdown-item.selected {
+            background-color: #1e40af;
+            color: #dbeafe;
+        }
+        
+        .dropdown-item.no-results {
+            color: #9ca3af;
+        }
+    }
+}
+
+/* Fix para iOS Safari */
+@supports (-webkit-touch-callout: none) {
+    .mobile-search-input,
+    .search-input {
+        font-size: 16px !important;
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+    
+    .mobile-search-modal {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .results-list {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Animaciones mejoradas */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-2px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-input {
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.search-dropdown {
+    animation: slideDown 0.2s ease-out;
+}
+
+/* Reducir animaciones para usuarios que prefieren menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+    .mobile-search-modal,
+    .mobile-search-modal .modal-content,
+    .search-input,
+    .search-dropdown,
+    .result-item,
+    .dropdown-item {
+        animation: none !important;
+        transition: none !important;
+    }
+}

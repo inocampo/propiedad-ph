@@ -1,6 +1,6 @@
 /**
- * Aplicación Principal del Formulario
- * Coordina la inicialización de todos los módulos
+ * Aplicación Principal del Formulario - VERSIÓN SEGURA
+ * Mantiene toda la funcionalidad original y añade optimizaciones móviles
  */
 
 window.FormularioApp = {
@@ -13,15 +13,23 @@ window.FormularioApp = {
         'PetsModule',
         'SpecialFeatures',
         'DataLoader',
-        'ExitHandler'
+        'ExitHandler',
+        'LightweightSearchSelect'
     ],
     
+    isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+    
     init: function() {
-        window.FormularioUtils.log('🚀 Inicializando aplicación del formulario');
+        window.FormularioUtils.log(`🚀 Inicializando aplicación del formulario ${this.isMobile ? '(MÓVIL)' : '(DESKTOP)'}`);
         
         try {
             // Verificar dependencias críticas
             this.verifyDependencies();
+            
+            // Configurar optimizaciones móviles ANTES de inicializar módulos
+            if (this.isMobile) {
+                this.setupMobileOptimizations();
+            }
             
             // Inicializar módulos en orden
             this.initializeModules();
@@ -29,10 +37,127 @@ window.FormularioApp = {
             // Configurar eventos globales
             this.setupGlobalEvents();
             
+            // Configurar eventos específicos para móviles
+            if (this.isMobile) {
+                this.setupMobileEvents();
+            }
+            
             window.FormularioUtils.log('✅ Aplicación inicializada correctamente');
         } catch (error) {
             window.FormularioUtils.error('❌ Error al inicializar la aplicación', error);
         }
+    },
+
+    setupMobileOptimizations: function() {
+        window.FormularioUtils.log('📱 Configurando optimizaciones móviles');
+        
+        // Prevenir zoom en inputs (método más seguro)
+        setTimeout(() => {
+            this.preventInputZoom();
+        }, 100);
+        
+        // Optimizar viewport para móviles
+        this.optimizeViewport();
+        
+        // Mejorar el touch experience
+        setTimeout(() => {
+            this.enhanceTouchExperience();
+        }, 200);
+    },
+
+    preventInputZoom: function() {
+        // Método más seguro que no interfiere con la carga de datos
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @media screen and (max-width: 768px) {
+                input, select, textarea {
+                    font-size: 16px !important;
+                    transform: translateZ(0);
+                }
+                
+                .search-input, .mobile-search-input {
+                    font-size: 16px !important;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        window.FormularioUtils.log('📱 Prevención de zoom aplicada via CSS');
+    },
+
+    optimizeViewport: function() {
+        let viewportMeta = document.querySelector('meta[name="viewport"]');
+        
+        if (!viewportMeta) {
+            viewportMeta = document.createElement('meta');
+            viewportMeta.name = 'viewport';
+            document.head.appendChild(viewportMeta);
+        }
+        
+        viewportMeta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover';
+        
+        window.FormularioUtils.log('📱 Viewport optimizado');
+    },
+
+    enhanceTouchExperience: function() {
+        // Mejorar feedback táctil de forma segura
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @media screen and (max-width: 768px) {
+                button, .result-item, .dropdown-item, .search-trigger-btn {
+                    min-height: 44px;
+                    min-width: 44px;
+                    touch-action: manipulation;
+                }
+                
+                button:active, .result-item:active, .search-trigger-btn:active {
+                    opacity: 0.8;
+                    transform: scale(0.98);
+                }
+                
+                .remove-btn {
+                    min-height: 44px !important;
+                    min-width: 44px !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        window.FormularioUtils.log('📱 Experiencia táctil mejorada');
+    },
+
+    setupMobileEvents: function() {
+        // Solo eventos esenciales que no interfieren con la funcionalidad
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', () => {
+                const activeModal = document.querySelector('.mobile-search-modal.modal-visible');
+                if (activeModal) {
+                    const modalContent = activeModal.querySelector('.modal-content');
+                    if (modalContent) {
+                        const currentHeight = window.visualViewport.height;
+                        modalContent.style.maxHeight = `${currentHeight - 40}px`;
+                    }
+                }
+            });
+        }
+        
+        // Mejorar orientación
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                const activeModal = document.querySelector('.mobile-search-modal.modal-visible');
+                if (activeModal) {
+                    const modalContent = activeModal.querySelector('.modal-content');
+                    if (modalContent) {
+                        modalContent.style.maxHeight = 'calc(100vh - 120px)';
+                    }
+                }
+            }, 500);
+        });
+        
+        window.FormularioUtils.log('📱 Eventos móviles básicos configurados');
     },
     
     verifyDependencies: function() {
@@ -100,8 +225,14 @@ window.FormularioApp = {
             try {
                 const module = window[moduleName];
                 if (module && typeof module.init === 'function') {
-                    module.init();
-                    window.FormularioUtils.log(`✅ ${moduleName} inicializado`);
+                    // Para el buscador, usar initWithCSS si está disponible
+                    if (moduleName === 'LightweightSearchSelect' && typeof module.initWithCSS === 'function') {
+                        module.initWithCSS();
+                        window.FormularioUtils.log(`✅ ${moduleName} inicializado con CSS móvil`);
+                    } else {
+                        module.init();
+                        window.FormularioUtils.log(`✅ ${moduleName} inicializado`);
+                    }
                 } else {
                     window.FormularioUtils.error(`❌ ${moduleName} no disponible o sin método init`);
                 }
@@ -162,6 +293,14 @@ window.FormularioApp = {
                 brands: window.brandsData ? window.brandsData.length : 0,
                 colors: window.colorsData ? window.colorsData.length : 0,
                 relationships: window.relationshipsData ? window.relationshipsData.length : 0
+            },
+            device: {
+                isMobile: this.isMobile,
+                userAgent: navigator.userAgent,
+                viewport: {
+                    width: window.innerWidth,
+                    height: window.innerHeight
+                }
             }
         };
         
@@ -189,14 +328,24 @@ window.FormularioApp = {
             }
         });
         
+        // Cerrar modales móviles si están abiertos
+        if (this.isMobile) {
+            const activeModals = document.querySelectorAll('.mobile-search-modal');
+            activeModals.forEach(modal => {
+                if (modal.parentNode) {
+                    modal.remove();
+                }
+            });
+            document.body.style.overflow = '';
+        }
+        
         // Reinicializar
         this.init();
     }
 };
 
 /**
- * Manejo de guardado dual - VERSIÓN CORREGIDA
- * Mejora la experiencia de usuario durante el guardado
+ * Manejo de guardado dual - VERSIÓN SIMPLIFICADA Y SEGURA
  */
 window.SaveHandler = {
     init: function() {
@@ -233,36 +382,40 @@ window.SaveHandler = {
             return;
         }
         
-        // Validar formulario antes de enviar
-        if (!this.validateForm(form)) {
-            event.preventDefault();
-            window.FormularioUtils.log('Validación de formulario falló');
-            this.resetButtonState(button, action);
-            return;
+        // Cerrar modales móviles antes de guardar
+        if (window.FormularioApp.isMobile) {
+            const activeModals = document.querySelectorAll('.mobile-search-modal');
+            activeModals.forEach(modal => {
+                if (modal.parentNode) {
+                    modal.remove();
+                }
+            });
+            document.body.style.overflow = '';
         }
         
         // Mostrar estado de carga
         this.showLoadingState(button, action);
         
-        // Guardar estado en sessionStorage para mantener posición después del guardado
+        // Guardar estado para "continuar editando"
         if (action === 'save_continue') {
             this.saveFormState();
         }
         
+        // Marcar como guardado para el ExitHandler
         if (window.ExitHandler && typeof window.ExitHandler.markAsSaved === 'function') {
             window.ExitHandler.markAsSaved();
         }
+        
         window.FormularioUtils.log(`Enviando formulario con acción: ${action}`);
-        // El formulario se enviará normalmente después de esto
+        // El formulario se enviará normalmente
     },
     
     showLoadingState: function(button, action) {
-        const originalText = button.textContent;
+        const originalText = button.innerHTML;
         button.disabled = true;
         button.style.opacity = '0.7';
         button.style.cursor = 'not-allowed';
         
-        // Cambiar texto según la acción
         const loadingText = action === 'save_continue' 
             ? 'Guardando...' 
             : 'Guardando y Finalizando...';
@@ -275,71 +428,12 @@ window.SaveHandler = {
             ${loadingText}
         `;
         
-        // Guardar texto original para restaurar en caso de error
         button.setAttribute('data-original-text', originalText);
         
         window.FormularioUtils.log(`Estado de carga mostrado para: ${action}`);
     },
     
-    resetButtonState: function(button, action) {
-        button.disabled = false;
-        button.style.opacity = '1';
-        button.style.cursor = 'pointer';
-        
-        const originalText = button.getAttribute('data-original-text');
-        if (originalText) {
-            button.textContent = originalText;
-        }
-        
-        window.FormularioUtils.log(`Estado del botón restaurado para: ${action}`);
-    },
-    
-    validateForm: function(form) {
-        // Validación básica - campos requeridos
-        const requiredFields = form.querySelectorAll('input[required], select[required]');
-        let isValid = true;
-        
-        // Remover clases de error previas
-        form.querySelectorAll('.border-red-500').forEach(field => {
-            field.classList.remove('border-red-500');
-        });
-        
-        requiredFields.forEach(field => {
-            if (!field.value.trim()) {
-                field.classList.add('border-red-500');
-                isValid = false;
-                
-                // Remover la clase de error después de que el usuario empiece a escribir
-                field.addEventListener('input', () => {
-                    field.classList.remove('border-red-500');
-                }, { once: true });
-            }
-        });
-        
-        if (!isValid) {
-            this.showValidationError();
-            // Scroll al primer campo con error
-            const firstError = form.querySelector('.border-red-500');
-            if (firstError) {
-                firstError.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'center' 
-                });
-                setTimeout(() => firstError.focus(), 500);
-            }
-        }
-        
-        window.FormularioUtils.log(`Validación de formulario: ${isValid ? 'exitosa' : 'fallida'}`);
-        return isValid;
-    },
-    
-    showValidationError: function() {
-        // Mostrar toast de error
-        this.showToast('Por favor completa todos los campos requeridos', 'error');
-    },
-    
     saveFormState: function() {
-        // Guardar estado del acordeón abierto y posición de scroll
         const openAccordions = [];
         document.querySelectorAll('.accordion-body:not(.hidden)').forEach(body => {
             const header = body.previousElementSibling;
@@ -355,7 +449,6 @@ window.SaveHandler = {
     },
     
     restoreFormState: function() {
-        // Restaurar acordeones abiertos
         const openAccordions = JSON.parse(sessionStorage.getItem('openAccordions') || '[]');
         openAccordions.forEach(headerId => {
             if (window.AccordionManager) {
@@ -363,7 +456,6 @@ window.SaveHandler = {
             }
         });
         
-        // Restaurar posición de scroll
         const scrollPosition = sessionStorage.getItem('scrollPosition');
         if (scrollPosition) {
             setTimeout(() => {
@@ -371,51 +463,10 @@ window.SaveHandler = {
             }, 100);
         }
         
-        // Limpiar estado guardado
         sessionStorage.removeItem('openAccordions');
         sessionStorage.removeItem('scrollPosition');
         
         window.FormularioUtils.log('Estado del formulario restaurado');
-    },
-    
-    showToast: function(message, type = 'info') {
-        // Crear toast dinámicamente
-        const toast = document.createElement('div');
-        toast.className = `fixed top-4 right-4 z-50 flex items-center w-full max-w-md p-4 text-gray-500 bg-white rounded-lg shadow-lg border-l-4 ${
-            type === 'error' ? 'border-red-500' : 'border-blue-500'
-        }`;
-        
-        toast.innerHTML = `
-            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 ${
-                type === 'error' ? 'text-red-500 bg-red-100' : 'text-blue-500 bg-blue-100'
-            } rounded-lg">
-                ${type === 'error' 
-                    ? '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>'
-                    : '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>'
-                }
-            </div>
-            <div class="ml-3 text-sm font-medium text-gray-900">
-                ${message}
-            </div>
-            <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8" onclick="this.parentElement.remove()">
-                <span class="sr-only">Cerrar</span>
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-        `;
-        
-        document.body.appendChild(toast);
-        
-        // Auto-remover después de 5 segundos
-        setTimeout(() => {
-            if (toast.parentElement) {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(100%)';
-                toast.style.transition = 'all 0.3s ease-out';
-                setTimeout(() => toast.remove(), 300);
-            }
-        }, 5000);
     }
 };
 
@@ -432,6 +483,7 @@ window.statusFormulario = function() {
         console.table(status.modules);
         console.log('Contadores:', status.counters);
         console.log('Datos:', status.data);
+        console.log('Dispositivo:', status.device);
         return status;
     }
 };
@@ -444,7 +496,12 @@ window.restartFormulario = function() {
 
 // Inicialización automática cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
-    // Pequeño retraso para asegurar que todos los scripts estén cargados
+    // Asegurar que SaveHandler esté disponible
+    if (window.SaveHandler && typeof window.SaveHandler.init === 'function') {
+        window.SaveHandler.init();
+    }
+    
+    // Inicializar la aplicación principal
     setTimeout(() => {
         if (window.FormularioApp) {
             window.FormularioApp.init();

@@ -44,7 +44,7 @@
     
     #residents-container td:nth-child(4),
     #residents-container th:nth-child(4) { 
-        width: 30%; 
+        width: 20%; 
     }
     
     #residents-container td:nth-child(5),

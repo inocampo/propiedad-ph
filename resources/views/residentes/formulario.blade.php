@@ -6,6 +6,10 @@
     <title>Formulario de Residentes - Conjunto Residencial Gualanday</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('css/formulario.css') }}">
+
+    <!-- CSS del formulario y búsqueda ligera -->
+    <link rel="stylesheet" href="{{ asset('css/formulario.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/lightweight-search.css') }}">
 </head>
 <body class="bg-gray-100">
     <div class="min-h-screen py-10">
@@ -275,6 +279,9 @@
     
     <!-- NUEVO: Core: Manejador de salida sin guardar -->
     <script src="{{ asset('js/core/exit-handler.js') }}"></script>
+
+    <!-- 🆕 NUEVO: Core: Búsqueda ligera para selects -->
+    <script src="{{ asset('js/core/lightweight-search-select.js') }}"></script>
 
     <!-- Aplicación principal -->
     <script src="{{ asset('js/app.js') }}"></script>
