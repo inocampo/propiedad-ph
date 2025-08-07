@@ -45,7 +45,7 @@
                                     </svg>
                                     <span class="font-medium text-lg">Información General</span>
                                 </div>
-                                <button type="button" class="accordion-toggle focus:outline-none" onclick="toggleAccordion('info-general-header')">
+                                <button type="button" class="accordion-toggle focus:outline-none">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                     </svg>
@@ -131,7 +131,7 @@
                                     <span class="font-medium text-lg">Vehículos</span>
                                     <span class="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full ml-3" id="vehicles-counter">0</span>
                                 </div>
-                                <button type="button" class="accordion-toggle focus:outline-none" onclick="toggleAccordion('vehiculos-header')">
+                                <button type="button" class="accordion-toggle focus:outline-none">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                     </svg>
@@ -152,7 +152,7 @@
                                     <span class="font-medium text-lg">Mascotas</span>
                                     <span class="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full ml-3" id="pets-counter">0</span>
                                 </div>
-                                <button type="button" class="accordion-toggle focus:outline-none" onclick="toggleAccordion('mascotas-header')">
+                                <button type="button" class="accordion-toggle focus:outline-none">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                     </svg>
