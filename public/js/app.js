@@ -63,6 +63,410 @@ window.FormularioApp = {
         setTimeout(() => {
             this.enhanceTouchExperience();
         }, 200);
+        
+        // Crear menú móvil inferior
+        setTimeout(() => {
+            this.createMobileMenu();
+        }, 600);
+    },
+
+    createMobileMenu: function() {
+        this.createFloatingButtons(); // Mantener el nombre del método para compatibilidad
+    },
+
+    createFloatingButtons: function() {
+        if (!this.isMobile) return;
+        
+        // Buscar los botones originales
+        const originalButtons = document.querySelectorAll('button[name="action"], #btn-exit-no-save');
+        if (originalButtons.length === 0) return;
+        
+        // Ocultar los botones originales en móvil
+        originalButtons.forEach(btn => {
+            btn.style.display = 'none';
+        });
+        
+        // Crear contenedor de botones flotantes
+        const floatingContainer = document.createElement('div');
+        floatingContainer.className = 'floating-buttons-container';
+        floatingContainer.innerHTML = `
+            <div class="floating-buttons">
+                <button type="button" class="floating-btn floating-btn-primary" data-action="save_continue">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                    </svg>
+                    <span class="btn-text">Guardar</span>
+                </button>
+                
+                <button type="button" class="floating-btn floating-btn-success" data-action="save_exit">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span class="btn-text">Finalizar</span>
+                </button>
+                
+                <!-- 🆕 AGREGAR ESTE BOTÓN -->
+                <button type="button" class="floating-btn floating-btn-danger" data-action="exit_no_save">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span class="btn-text">Salir</span>
+                </button>
+            </div>
+        `;
+        
+        // Añadir estilos CSS
+        this.addFloatingButtonStyles();
+        
+        // Insertar en el body
+        document.body.appendChild(floatingContainer);
+        
+        // Configurar eventos
+        this.setupFloatingButtonEvents(floatingContainer);
+        
+        window.FormularioUtils.log('📱 Botones flotantes creados');
+    },
+
+    addFloatingButtonStyles: function() {
+        if (document.querySelector('#floating-buttons-styles')) {
+            return; // Ya existen los estilos
+        }
+        
+        const style = document.createElement('style');
+        style.id = 'floating-buttons-styles';
+        style.innerHTML = `
+            @media (max-width: 768px) {
+                /* Contenedor de botones flotantes */
+                .floating-buttons-container {
+                    position: fixed;
+                    bottom: 2rem;
+                    right: 1rem;
+                    z-index: 1000;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.75rem;
+                    pointer-events: none;
+                }
+                
+                .floating-buttons {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.75rem;
+                    pointer-events: auto;
+                }
+                
+                /* Botón flotante base */
+                .floating-btn {
+                    width: 3.5rem;
+                    height: 3.5rem;
+                    border-radius: 50%;
+                    border: none;
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    position: relative;
+                    overflow: hidden;
+                    font-weight: 600;
+                    backdrop-filter: blur(20px);
+                    -webkit-backdrop-filter: blur(20px);
+                    touch-action: manipulation;
+                    user-select: none;
+                    -webkit-user-select: none;
+                    transform: translateX(0);
+                }
+                
+                /* Estados del botón */
+                .floating-btn:hover {
+                    transform: scale(1.1) translateY(-2px);
+                    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+                }
+                
+                .floating-btn:active {
+                    transform: scale(0.95);
+                    transition: transform 0.1s;
+                }
+                
+                /* Botón primario (Guardar y Continuar) */
+                .floating-btn-primary {
+                    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+                    color: white;
+                }
+                
+                .floating-btn-primary:hover {
+                    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+                }
+                
+                /* Botón de éxito (Guardar y Finalizar) */
+                .floating-btn-success {
+                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                    color: white;
+                }
+                
+                .floating-btn-success:hover {
+                    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+                }
+                
+                /* Botón de peligro (Salir sin Guardar) */
+                .floating-btn-danger {
+                    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                    color: white;
+                }
+                
+                .floating-btn-danger:hover {
+                    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+                }
+                
+                /* Iconos y texto */
+                .btn-icon {
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    transition: all 0.3s ease;
+                }
+                
+                .btn-text {
+                    position: absolute;
+                    right: calc(100% + 0.75rem);
+                    background: rgba(0, 0, 0, 0.8);
+                    color: white;
+                    padding: 0.5rem 0.75rem;
+                    border-radius: 1rem;
+                    font-size: 0.875rem;
+                    white-space: nowrap;
+                    opacity: 0;
+                    transform: translateX(0.5rem);
+                    transition: all 0.3s ease;
+                    pointer-events: none;
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                }
+                
+                .floating-btn:hover .btn-text {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+                
+                /* Efecto ripple */
+                .floating-btn::before {
+                    content: '';
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: 0;
+                    height: 0;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.3);
+                    transform: translate(-50%, -50%);
+                    transition: width 0.3s, height 0.3s;
+                }
+                
+                .floating-btn:active::before {
+                    width: 100%;
+                    height: 100%;
+                }
+                
+                /* Estado de carga */
+                .floating-btn.loading {
+                    pointer-events: none;
+                    opacity: 0.7;
+                }
+                
+                .floating-btn.loading .btn-icon {
+                    animation: spin 1s linear infinite;
+                }
+                
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+                
+                /* Animación de entrada */
+                .floating-buttons-container {
+                    animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+                
+                @keyframes slideInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(100px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+                
+                /* Ajuste para keyboards virtuales */
+                @media (max-height: 600px) {
+                    .floating-buttons-container {
+                        bottom: 1rem;
+                        transform: scale(0.9);
+                    }
+                }
+                
+                /* Soporte para safe area */
+                @supports (padding: max(0px)) {
+                    .floating-buttons-container {
+                        bottom: max(2rem, env(safe-area-inset-bottom, 2rem));
+                        right: max(1rem, env(safe-area-inset-right, 1rem));
+                    }
+                }
+            }
+            
+            /* Ocultar SOLO los botones específicos de guardado y salida en móvil */
+            @media (max-width: 768px) {
+                button[name="action"],
+                #btn-exit-no-save {
+                    display: none !important;
+                }
+                
+                /* NO ocultar otros botones como "Agregar Residente", etc. */
+                .mt-8 button:not([name="action"]):not(#btn-exit-no-save) {
+                    display: flex !important;
+                }
+            }
+
+            @media (min-width: 769px) {
+                button[name="action"],
+                #btn-exit-no-save {
+                    display: flex !important;
+                }
+                
+                /* Ocultar botones flotantes en desktop */
+                .floating-buttons-container {
+                    display: none !important;
+                }
+            }
+        `;
+        
+        document.head.appendChild(style);
+    },
+
+    setupFloatingButtonEvents: function(container) {
+        const buttons = container.querySelectorAll('.floating-btn');
+        
+        buttons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const action = btn.getAttribute('data-action');
+                this.handleFloatingButtonClick(action, btn);
+            });
+            
+            // Vibración táctil en dispositivos compatibles
+            btn.addEventListener('touchstart', () => {
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(10);
+                }
+            });
+        });
+    },
+
+    handleFloatingButtonClick: function(action, button) {
+        window.FormularioUtils.log(`📱 Click en botón flotante: ${action}`);
+        
+        // Cerrar modales si están abiertos
+        const activeModals = document.querySelectorAll('.mobile-search-modal');
+        activeModals.forEach(modal => {
+            if (modal.parentNode) {
+                modal.remove();
+            }
+        });
+        document.body.style.overflow = '';
+        
+        // Manejar acción de salir sin guardar
+        if (action === 'exit_no_save') {
+            if (window.ExitHandler && typeof window.ExitHandler.handleExitClick === 'function') {
+                // Usar la funcionalidad del ExitHandler
+                window.ExitHandler.handleExitClick();
+            } else {
+                // Fallback: redirigir directamente
+                window.location.href = '/residentes';
+            }
+            return;
+        }
+        
+        // Mostrar estado de carga para acciones de guardado
+        this.showFloatingButtonLoading(button, action);
+        
+        // Buscar el formulario y hacer submit
+        const form = document.querySelector('form[method="POST"]');
+        if (form) {
+            // Crear input hidden con la acción
+            let actionInput = form.querySelector('input[name="action"]');
+            if (!actionInput) {
+                actionInput = document.createElement('input');
+                actionInput.type = 'hidden';
+                actionInput.name = 'action';
+                form.appendChild(actionInput);
+            }
+            actionInput.value = action;
+            
+            // Guardar estado si es "continuar"
+            if (action === 'save_continue') {
+                this.saveFormState();
+            }
+            
+            // Marcar como guardado
+            if (window.ExitHandler && typeof window.ExitHandler.markAsSaved === 'function') {
+                window.ExitHandler.markAsSaved();
+            }
+            
+            // Enviar formulario
+            setTimeout(() => {
+                form.submit();
+            }, 300);
+        }
+    },
+
+    showFloatingButtonLoading: function(button, action) {
+        button.classList.add('loading');
+        button.style.pointerEvents = 'none';
+        
+        const icon = button.querySelector('.btn-icon');
+        const text = button.querySelector('.btn-text');
+        
+        // Cambiar icono a spinner
+        icon.innerHTML = `
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        `;
+        
+        // Cambiar texto según la acción
+        if (text) {
+            switch(action) {
+                case 'save_continue':
+                    text.textContent = 'Guardando...';
+                    break;
+                case 'save_exit':
+                    text.textContent = 'Finalizando...';
+                    break;
+                case 'exit_no_save':
+                    text.textContent = 'Saliendo...';
+                    break;
+                default:
+                    text.textContent = 'Procesando...';
+            }
+        }
+    },
+
+    saveFormState: function() {
+        // Guardar acordeones abiertos
+        const openAccordions = [];
+        document.querySelectorAll('.accordion-body:not(.hidden)').forEach(body => {
+            const header = body.previousElementSibling;
+            if (header && header.id) {
+                openAccordions.push(header.id);
+            }
+        });
+        
+        sessionStorage.setItem('openAccordions', JSON.stringify(openAccordions));
+        sessionStorage.setItem('scrollPosition', window.pageYOffset);
+        
+        window.FormularioUtils.log('📱 Estado del formulario guardado');
     },
 
     preventInputZoom: function() {
@@ -100,17 +504,17 @@ window.FormularioApp = {
     },
 
     enhanceTouchExperience: function() {
-        // Mejorar feedback táctil de forma segura
+        // Mejorar feedback táctil de forma segura (excluyendo botones flotantes)
         const style = document.createElement('style');
         style.innerHTML = `
             @media screen and (max-width: 768px) {
-                button, .result-item, .dropdown-item, .search-trigger-btn {
+                button:not(.floating-btn), .result-item, .dropdown-item, .search-trigger-btn {
                     min-height: 44px;
                     min-width: 44px;
                     touch-action: manipulation;
                 }
                 
-                button:active, .result-item:active, .search-trigger-btn:active {
+                button:not(.floating-btn):active, .result-item:active, .search-trigger-btn:active {
                     opacity: 0.8;
                     transform: scale(0.98);
                 }
@@ -122,11 +526,17 @@ window.FormularioApp = {
                     align-items: center !important;
                     justify-content: center !important;
                 }
+                
+                /* Asegurar que los botones flotantes no se vean afectados */
+                .floating-btn {
+                    min-height: auto !important;
+                    min-width: auto !important;
+                }
             }
         `;
         document.head.appendChild(style);
         
-        window.FormularioUtils.log('📱 Experiencia táctil mejorada');
+        window.FormularioUtils.log('📱 Experiencia táctil mejorada (excluyendo botones flotantes)');
     },
 
     setupMobileEvents: function() {
