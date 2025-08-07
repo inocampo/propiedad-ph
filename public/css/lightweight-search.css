@@ -1,19 +1,18 @@
 /**
- * Lightweight Search Select Styles - OPTIMIZADO PARA MÓVILES
+ * Lightweight Search Select Styles - VERSIÓN CONSERVADORA
  * public/css/lightweight-search.css
  * 
- * Estilos que funcionan perfectamente tanto en desktop como móvil
+ * Solo afecta elementos específicos del buscador, no interfiere con el resto
  */
 
-/* ===== WRAPPER CONTENEDOR BASE ===== */
+/* ===== WRAPPER CONTENEDOR BASE - SOLO PARA BÚSQUEDA ===== */
 .search-select-wrapper {
     position: relative;
     width: 100%;
     display: inline-block;
-    z-index: 1; /* Base z-index */
+    z-index: 1;
 }
 
-/* Cuando está activo, aumentar el z-index */
 .search-select-wrapper.search-active {
     z-index: 1000;
 }
@@ -21,23 +20,20 @@
 /* ===== ESTILOS MÓVILES ===== */
 @media (max-width: 768px) {
     
-    /* Wrapper para móviles */
     .search-select-wrapper.mobile-search {
         position: relative;
         display: flex;
         align-items: center;
     }
     
-    /* Select en móviles - ajustado para el botón */
     .search-select-wrapper.mobile-search select {
         width: 100%;
         padding-right: 4.5rem !important;
-        font-size: 16px !important; /* Prevenir zoom en iOS */
+        font-size: 16px !important;
         -webkit-appearance: none;
         appearance: none;
     }
     
-    /* Botón de búsqueda móvil */
     .search-trigger-btn {
         position: absolute !important;
         top: 0 !important;
@@ -106,7 +102,6 @@
         transform: translateY(0);
     }
     
-    /* Header del modal */
     .modal-header {
         padding: 1.25rem 1rem 1rem 1rem;
         border-bottom: 1px solid #e5e7eb;
@@ -149,23 +144,21 @@
         color: #374151;
     }
     
-    /* Container del input de búsqueda */
     .modal-header + div {
         padding: 1rem;
         border-bottom: 1px solid #e5e7eb;
         background: white;
         position: sticky;
-        top: 73px; /* Altura del header */
+        top: 73px;
         z-index: 9;
     }
     
-    /* Input de búsqueda en el modal */
     .mobile-search-input {
         width: 100%;
         padding: 0.875rem 1rem;
         border: 2px solid #d1d5db;
         border-radius: 0.75rem;
-        font-size: 16px !important; /* Prevenir zoom en iOS */
+        font-size: 16px !important;
         outline: none;
         transition: border-color 0.2s, box-shadow 0.2s;
         background: #f9fafb;
@@ -177,7 +170,6 @@
         background: white;
     }
     
-    /* Lista de resultados */
     .results-list {
         flex: 1;
         overflow-y: auto;
@@ -185,7 +177,6 @@
         background: white;
     }
     
-    /* Items de resultado */
     .result-item {
         padding: 1.25rem 1rem;
         border-bottom: 1px solid #f3f4f6;
@@ -209,7 +200,6 @@
         background-color: #f3f4f6;
     }
     
-    /* Item seleccionado */
     .result-item[data-selected="true"] {
         background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
         color: #1d4ed8;
@@ -223,7 +213,6 @@
         font-size: 1.125rem;
     }
     
-    /* Scrollbar para móviles */
     .results-list::-webkit-scrollbar {
         width: 4px;
     }
@@ -237,7 +226,6 @@
         border-radius: 2px;
     }
     
-    /* Mensaje de sin resultados */
     .no-results-message {
         padding: 3rem 2rem;
         text-align: center;
@@ -255,7 +243,6 @@
         opacity: 0.5;
     }
     
-    /* Toast de feedback */
     .mobile-feedback-toast {
         position: fixed;
         top: max(20px, env(safe-area-inset-top, 20px));
@@ -273,42 +260,6 @@
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         max-width: calc(100vw - 40px);
         text-align: center;
-    }
-    
-    /* Estados del modal */
-    .mobile-search-modal[data-closing="true"] {
-        opacity: 0;
-    }
-    
-    .mobile-search-modal[data-closing="true"] .modal-content {
-        transform: translateY(-20px);
-    }
-    
-    /* Animaciones para móvil */
-    @keyframes modalSlideUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    .mobile-search-modal.modal-visible .modal-content {
-        animation: modalSlideUp 0.3s ease-out;
-    }
-    
-    /* Soporte para notch/safe area */
-    @supports (padding: max(0px)) {
-        .mobile-search-modal .modal-content {
-            margin-top: max(60px, env(safe-area-inset-top, 60px));
-        }
-        
-        .mobile-feedback-toast {
-            top: max(20px, env(safe-area-inset-top, 20px));
-        }
     }
 }
 
@@ -337,7 +288,7 @@
     
     /* Estado activo de búsqueda desktop */
     .search-select-wrapper.desktop-search.search-active {
-        z-index: 1000; /* Asegurar que el wrapper esté encima */
+        z-index: 1000;
     }
     
     .search-select-wrapper.desktop-search.search-active .search-input {
@@ -346,18 +297,18 @@
         box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
     }
     
-    /* Indicador de búsqueda desktop mejorado */
-    .search-indicator {
-        position: absolute !important;
-        right: 0.5rem !important; /* Más cerca del borde */
-        top: 50% !important;
-        transform: translateY(-50%) !important;
-        pointer-events: none !important;
-        font-size: 0.875rem !important; /* Tamaño más pequeño */
-        color: #3b82f6 !important;
-        z-index: 2 !important; /* Encima del select */
-        transition: all 0.2s ease !important;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+    /* Indicador de búsqueda desktop - MUY ESPECÍFICO */
+    .search-select-wrapper.desktop-search .search-indicator {
+        position: absolute;
+        right: 0.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        font-size: 0.875rem;
+        color: #3b82f6;
+        z-index: 2;
+        transition: all 0.2s ease;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         animation: searchPulse 2s ease-in-out infinite;
         width: 1rem;
         height: 1rem;
@@ -379,9 +330,9 @@
     
     .search-select-wrapper.desktop-search:hover .search-indicator {
         opacity: 1 !important;
-        transform: translateY(-50%) scale(1.1) !important; /* Efecto de hover */
-        color: #1d4ed8 !important; /* Azul más oscuro en hover */
-        animation: none; /* Detener animación en hover */
+        transform: translateY(-50%) scale(1.1) !important;
+        color: #1d4ed8 !important;
+        animation: none;
     }
     
     .search-select-wrapper.desktop-search.search-active .search-indicator {
@@ -389,91 +340,22 @@
         animation: none;
     }
     
-    /* Mejorar el cursor en el área del select */
+    /* SOLO para selects DENTRO del wrapper de búsqueda desktop */
     .search-select-wrapper.desktop-search select {
-        cursor: help; /* Cursor que indica que hay ayuda disponible */
+        cursor: help;
+        transition: all 0.15s ease-in-out;
         position: relative;
+        z-index: 1;
+        padding-right: 2.5rem !important;
+        background-position: right 0.5rem center !important;
+        box-sizing: border-box;
+        vertical-align: baseline;
     }
-    
-    /* Cambiar cursor en el área del indicador */
+
     .search-select-wrapper.desktop-search select:hover {
+        border-color: #9ca3af;
         cursor: pointer;
     }
-    
-    /* Estilo del tooltip personalizado */
-    .desktop-search-tooltip {
-        position: absolute;
-        bottom: calc(100% + 0.5rem);
-        left: 50%;
-        transform: translateX(-50%);
-        background: #1f2937;
-        color: white;
-        padding: 0.5rem 0.75rem;
-        border-radius: 0.375rem;
-        font-size: 0.75rem;
-        white-space: nowrap;
-        z-index: 1010;
-        font-weight: 500;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        opacity: 0;
-        transition: opacity 0.2s ease, transform 0.2s ease;
-        pointer-events: none;
-    }
-
-/* ===== CORRECCIONES ESPECÍFICAS PARA FORMULARIO ===== */
-
-/* Asegurar alineación consistente en celdas de tabla */
-.repeater-cell {
-    vertical-align: top; /* Alineación consistente */
-}
-
-.repeater-cell input,
-.repeater-cell select,
-.repeater-cell .search-select-wrapper,
-.repeater-cell .search-select-wrapper select {
-    width: 100%;
-    height: auto;
-    min-height: 2.25rem;
-    box-sizing: border-box;
-    vertical-align: baseline;
-    margin: 0;
-    line-height: 1.5;
-}
-
-/* Corrección específica para selects mejorados */
-.repeater-cell .search-select-wrapper select {
-    padding-right: 2.5rem !important;
-    background-position: right 0.5rem center !important;
-}
-
-/* Asegurar que todos los controles tengan la misma altura base */
-@media (min-width: 769px) {
-    .repeater-row input,
-    .repeater-row select,
-    .repeater-row .search-select-wrapper select {
-        height: 2.5rem; /* Altura consistente en desktop */
-        padding-top: 0.375rem;
-        padding-bottom: 0.375rem;
-    }
-    
-    .repeater-row .search-select-wrapper select {
-        padding-right: 2.5rem !important;
-    }
-}
-
-/* Reset de margin y padding para evitar desalineación */
-.search-select-wrapper,
-.search-select-wrapper select {
-    margin: 0 !important;
-}
-
-/* Corrección para el wrapper base */
-.search-select-wrapper {
-    position: relative;
-    width: 100%;
-    display: block; /* Cambiar de inline-block a block para mejor alineación */
-    z-index: 1;
-}
     
     /* Dropdown para desktop */
     .search-dropdown {
@@ -487,8 +369,19 @@
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         max-height: 200px;
         overflow-y: auto;
-        z-index: 999; /* Aumentado significativamente */
+        z-index: 999;
         margin-top: 0.25rem;
+    }
+    
+    /* Asegurar que el dropdown no se corte en tablas */
+    .table-responsive:has(.search-active) {
+        overflow: visible !important;
+        z-index: 1000;
+    }
+    
+    .table-responsive.search-active-container {
+        overflow: visible !important;
+        z-index: 1000;
     }
     
     /* Items del dropdown desktop */
@@ -538,23 +431,102 @@
     .search-dropdown::-webkit-scrollbar-thumb:hover {
         background: #94a3b8;
     }
+    
+    /* Tooltip personalizado para desktop */
+    .desktop-search-tooltip {
+        position: absolute;
+        bottom: calc(100% + 0.5rem);
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1f2937;
+        color: white;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        z-index: 1010;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        opacity: 0;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        pointer-events: none;
+    }
 }
 
-/* ===== ESTILOS COMUNES ===== */
+/* ===== INTEGRACIÓN ESPECÍFICA CON TABLAS ===== */
+.repeater-row .search-select-wrapper {
+    width: 100%;
+    display: inline-block;
+}
 
-/* Mejoras para el select original */
-.search-select-wrapper select {
-    cursor: pointer;
-    transition: all 0.15s ease-in-out;
+/* Solo afectar el select CON BUSCADOR en tablas */
+.repeater-row .search-select-wrapper select {
+    font-size: 0.875rem;
+    padding-right: 2.5rem !important;
+    background-position: right 0.5rem center !important;
+}
+
+/* Solo afectar el input de búsqueda */
+.repeater-row .search-select-wrapper .search-input {
+    font-size: 0.875rem;
+}
+
+.repeater-row .search-select-wrapper .search-indicator {
+    right: 0.5rem !important;
+    font-size: 0.75rem !important;
+}
+
+.repeater-cell .search-select-wrapper {
+    display: inline-block;
+    width: 100%;
+}
+
+/* Asegurar que las tablas no interfieran con el dropdown */
+.repeater-row {
     position: relative;
     z-index: 1;
 }
 
-.search-select-wrapper select:hover {
-    border-color: #9ca3af;
+.repeater-row:has(.search-active) {
+    z-index: 1001;
+    position: relative;
 }
 
-/* Estados de error */
+.repeater-row .search-select-wrapper.search-active {
+    z-index: 1001;
+}
+
+.repeater-cell {
+    position: relative;
+    z-index: 1;
+}
+
+.repeater-cell:has(.search-active) {
+    z-index: 1002;
+    position: relative;
+}
+
+.repeater-cell .search-select-wrapper.search-active {
+    z-index: 1002;
+}
+
+/* CORRECCIÓN ESPECÍFICA: Solo para selects CON BUSCADOR */
+.repeater-cell .search-select-wrapper select {
+    height: 1.75rem !important;
+    min-height: 1.75rem !important;
+    max-height: 1.75rem !important;
+    padding-top: 0.300rem !important;
+    padding-bottom: 0.300rem !important;
+    padding-left: 0.75rem !important;
+    padding-right: 2.5rem !important;
+    box-sizing: border-box !important;
+    vertical-align: top !important;
+    line-height: 1.25 !important;
+}
+
+/* NO TOCAR otros inputs - eliminar reglas que los afectan */
+
+/* ===== ESTADOS DE ERROR ===== */
 .field-error .search-select-wrapper .search-input,
 .field-error .search-select-wrapper .mobile-search-input {
     border-color: #dc2626;
@@ -567,74 +539,7 @@
     box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
-/* Integración con tablas del repeater */
-.repeater-row .search-select-wrapper {
-    width: 100%;
-    display: inline-block; /* Asegurar comportamiento consistente */
-}
-
-.repeater-row .search-select-wrapper select,
-.repeater-row .search-select-wrapper .search-input {
-    font-size: 0.875rem;
-    min-height: 2.25rem;
-    height: 2.25rem; /* Altura fija para alineación */
-    box-sizing: border-box;
-    vertical-align: top;
-}
-
-/* Asegurar que el indicador se alinee correctamente en tablas */
-.repeater-row .search-select-wrapper .search-indicator {
-    right: 0.5rem !important;
-    font-size: 0.75rem !important; /* Más pequeño en tablas */
-}
-
-/* Asegurar alineación vertical en celdas de tabla */
-.repeater-cell .search-select-wrapper {
-    display: block;
-    width: 100%;
-}
-
-.repeater-cell .search-select-wrapper select {
-    width: 100%;
-    margin: 0;
-    vertical-align: baseline;
-}
-
-/* Asegurar que las tablas no interfieran con el dropdown */
-.repeater-row {
-    position: relative;
-    z-index: 1;
-}
-
-/* Cuando una fila tiene búsqueda activa, debe estar encima */
-.repeater-row:has(.search-active) {
-    z-index: 1001;
-    position: relative;
-}
-
-/* Alternativa para navegadores que no soporten :has() */
-.repeater-row .search-select-wrapper.search-active {
-    z-index: 1001;
-}
-
-/* Para las celdas de las tablas */
-.repeater-cell {
-    position: relative;
-    z-index: 1;
-}
-
-/* Asegurar que el dropdown esté por encima de las celdas siguientes */
-.repeater-cell:has(.search-active) {
-    z-index: 1002;
-    position: relative;
-}
-
-/* Alternativa para navegadores que no soporten :has() */
-.repeater-cell .search-select-wrapper.search-active {
-    z-index: 1002;
-}
-
-/* Accesibilidad */
+/* ===== ACCESIBILIDAD ===== */
 .search-select-wrapper select:focus,
 .search-select-wrapper .search-input:focus,
 .search-select-wrapper .mobile-search-input:focus {
@@ -642,7 +547,6 @@
     outline-offset: 2px;
 }
 
-/* Focus visible para navegación con teclado */
 .search-trigger-btn:focus-visible,
 .close-modal-btn:focus-visible,
 .result-item:focus-visible {
@@ -650,7 +554,7 @@
     outline-offset: 2px;
 }
 
-/* Optimización de rendimiento */
+/* ===== OPTIMIZACIÓN DE RENDIMIENTO ===== */
 .search-select-wrapper {
     contain: layout style;
 }
@@ -661,7 +565,53 @@
     will-change: transform, opacity;
 }
 
-/* Modo oscuro (opcional) */
+/* ===== ANIMACIONES ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-2px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-input {
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.search-dropdown {
+    animation: slideDown 0.2s ease-out;
+}
+
+.mobile-search-modal.modal-visible .modal-content {
+    animation: modalSlideUp 0.3s ease-out;
+}
+
+/* ===== MODO OSCURO (OPCIONAL) ===== */
 @media (prefers-color-scheme: dark) {
     @media (max-width: 768px) {
         .mobile-search-modal .modal-content {
@@ -726,7 +676,7 @@
     }
 }
 
-/* Fix para iOS Safari */
+/* ===== FIX PARA iOS SAFARI ===== */
 @supports (-webkit-touch-callout: none) {
     .mobile-search-input,
     .search-input {
@@ -745,46 +695,29 @@
     }
 }
 
-/* Animaciones mejoradas */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-2px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-4px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.search-input {
-    animation: fadeIn 0.2s ease-in-out;
-}
-
-.search-dropdown {
-    animation: slideDown 0.2s ease-out;
-}
-
-/* Reducir animaciones para usuarios que prefieren menos movimiento */
+/* ===== REDUCIR ANIMACIONES PARA USUARIOS QUE LAS PREFIEREN MENORES ===== */
 @media (prefers-reduced-motion: reduce) {
     .mobile-search-modal,
     .mobile-search-modal .modal-content,
     .search-input,
     .search-dropdown,
     .result-item,
-    .dropdown-item {
+    .dropdown-item,
+    .search-indicator {
         animation: none !important;
         transition: none !important;
+    }
+}
+
+/* ===== SOPORTE PARA SAFE AREA (DISPOSITIVOS CON NOTCH) ===== */
+@supports (padding: max(0px)) {
+    @media (max-width: 768px) {
+        .mobile-search-modal .modal-content {
+            margin-top: max(60px, env(safe-area-inset-top, 60px));
+        }
+        
+        .mobile-feedback-toast {
+            top: max(20px, env(safe-area-inset-top, 20px));
+        }
     }
 }

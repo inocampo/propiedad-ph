@@ -139,10 +139,10 @@ window.LightweightSearchSelect = {
     },
 
     enhanceSelectForDesktop: function(selectElement) {
-        // Usar la lógica original para desktop
+        // Crear wrapper con clase específica
         const wrapper = document.createElement('div');
         wrapper.className = 'search-select-wrapper desktop-search';
-        wrapper.style.position = 'relative';
+        wrapper.style.cssText = 'position: relative; display: inline-block; width: 100%;';
         
         const searchInput = document.createElement('input');
         searchInput.type = 'text';
@@ -151,11 +151,13 @@ window.LightweightSearchSelect = {
         searchInput.style.display = 'none';
         searchInput.style.fontSize = '16px'; // Prevenir zoom en iOS
         
-        this.addSearchIndicator(selectElement);
-        
+        // Añadir indicador SOLO después de crear el wrapper
         selectElement.parentNode.insertBefore(wrapper, selectElement);
         wrapper.appendChild(selectElement);
         wrapper.appendChild(searchInput);
+        
+        // Añadir indicador después de que esté en el wrapper
+        this.addSearchIndicator(selectElement);
         
         setTimeout(() => {
             const originalOptions = this.captureOriginalOptions(selectElement);
@@ -219,12 +221,13 @@ window.LightweightSearchSelect = {
             this.activateDesktopSearch(selectElement);
         });
         
-        // Click en el área del indicador
+        // Click en el área del indicador (ajustado para la nueva posición)
         selectElement.addEventListener('click', (e) => {
             const rect = selectElement.getBoundingClientRect();
             const clickX = e.clientX - rect.left;
             
-            if (clickX > rect.width - 60) {
+            // Área más pequeña, solo en los últimos 30px
+            if (clickX > rect.width - 30) {
                 e.preventDefault();
                 e.stopPropagation();
                 this.activateDesktopSearch(selectElement);
