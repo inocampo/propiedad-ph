@@ -16,8 +16,7 @@
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
                 <div class="text-center mb-8">
-                    <h1 class="text-3xl font-bold text-gray-800">Registro de Residentes</h1>
-                    <h2 class="text-gray-600 mt-2">Apartamento: {{ $apartamento ? $apartamento->number : request()->route('number') }}</h2>
+                    <h1 class="text-3xl font-bold text-gray-800">Registro de Apartamento: {{ $apartamento ? $apartamento->number : request()->route('number') }}</h1>
                     <p class="text-gray-600 mt-2"><span class="text-red-600">*</span> Campos obligatorios</p>
                 </div>
 
@@ -221,14 +220,6 @@
                             </svg>
                             Guardar y Finalizar
                         </button>
-                    </div>
-
-                    <!-- Mensaje de ayuda -->
-                    <div class="text-center mt-4">
-                        <p class="text-sm text-gray-600">
-                            <strong>Guardar y Continuar:</strong> Guarda los cambios y permite seguir editando.<br>
-                            <strong>Guardar y Finalizar:</strong> Guarda los cambios y regresa al inicio.
-                        </p>
                     </div>
 
                     <style>
